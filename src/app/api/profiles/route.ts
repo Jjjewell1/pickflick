@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, emoji, ageTier } = body;
+    const { name, emoji, ageTier, pin } = body;
 
     if (!name || !emoji || !ageTier) {
       return NextResponse.json(
@@ -32,11 +32,42 @@ export async function POST(req: Request) {
     }
 
     const profile = await prisma.profile.create({
-      data: { name, emoji, ageTier },
+      data: { name, emoji, ageTier, pin: pin || "" },
     });
-    return NextResponse.json(profile, { status: 201 });
+
+    const safe = { ...profile };
+    delete (safe as Record<string, unknown>).pin;
+    return NextResponse.json(safe, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create profile" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, name, emoji, ageTier, pin } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    const data: Record<string, string> = {};
+    if (name !== undefined) data.name = name;
+    if (emoji !== undefined) data.emoji = emoji;
+    if (ageTier !== undefined) data.ageTier = ageTier;
+    if (pin !== undefined) data.pin = pin;
+
+    const profile = await prisma.profile.update({
+      where: { id },
+      data,
+    });
+
+    const safe = { ...profile };
+    delete (safe as Record<string, unknown>).pin;
+    return NextResponse.json(safe);
+  } catch {
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }
 

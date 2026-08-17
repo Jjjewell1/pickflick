@@ -9,6 +9,7 @@ interface Profile {
   name: string;
   emoji: string;
   ageTier: string;
+  pin: string;
 }
 
 const EMOJI_OPTIONS = [
@@ -29,6 +30,7 @@ export default function SettingsPage() {
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState("🍿");
   const [ageTier, setAgeTier] = useState("adult");
+  const [pin, setPin] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -54,11 +56,17 @@ export default function SettingsPage() {
       await fetch("/api/profiles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), emoji, ageTier }),
+        body: JSON.stringify({
+          name: name.trim(),
+          emoji,
+          ageTier,
+          pin: pin.length === 4 ? pin : "",
+        }),
       });
       setName("");
       setEmoji("🍿");
       setAgeTier("adult");
+      setPin("");
       await fetchProfiles();
     } catch {
       // Silently fail
@@ -110,9 +118,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-white/60 text-sm mb-1.5">
-                Avatar
-              </label>
+              <label className="block text-white/60 text-sm mb-1.5">Avatar</label>
               <div className="relative">
                 <button
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -143,9 +149,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-white/60 text-sm mb-1.5">
-                Age Tier
-              </label>
+              <label className="block text-white/60 text-sm mb-1.5">Age Tier</label>
               <div className="grid grid-cols-3 gap-2">
                 {AGE_TIERS.map((t) => (
                   <button
@@ -162,6 +166,21 @@ export default function SettingsPage() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="block text-white/60 text-sm mb-1.5">
+                PIN <span className="text-white/30">(optional, 4 digits)</span>
+              </label>
+              <input
+                type="password"
+                inputMode="numeric"
+                maxLength={4}
+                value={pin}
+                onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+                placeholder="••••"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-theater-red/50 tracking-[0.5em] text-center"
+              />
             </div>
 
             <button
@@ -196,23 +215,18 @@ export default function SettingsPage() {
                   >
                     {p.ageTier}
                   </span>
+                  {p.pin && (
+                    <svg className="w-4 h-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  )}
                   <button
                     onClick={() => deleteProfile(p.id)}
                     className="text-white/30 hover:text-red-400 transition-colors p-1"
                     title="Remove"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>

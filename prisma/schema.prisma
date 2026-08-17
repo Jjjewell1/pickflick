@@ -12,6 +12,7 @@ model Profile {
   name      String
   emoji     String   @default("🍿")
   ageTier   String   @default("adult")
+  pin       String   @default("")
   createdAt DateTime @default(now())
 
   nominations Nomination[]
