@@ -27,17 +27,16 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+
+COPY docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data /app
 
+USER nextjs
+EXPOSE 3000
 ENV PORT=3000
 ENV DATABASE_URL="file:/app/data/pickflick.db"
 ENV HOSTNAME="0.0.0.0"
-
-# Run db push as root before dropping privileges
-USER root
-RUN ./node_modules/.bin/prisma db push --accept-data-loss 2>&1 || true && chown -R nextjs:nodejs /app/data
-
-USER nextjs
-EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["/app/entrypoint.sh"]
