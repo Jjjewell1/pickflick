@@ -1,9 +1,12 @@
 #!/bin/bash
-docker exec ellrcj5pdigaqtowqf8qif6x-125332723823 ls -la /app/data/pickflick.db
-echo "---"
-# Check table schema
-docker exec ellrcj5pdigaqtowqf8qif6x-125332723823 node -e "
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-prisma.profile.findMany().then(p => console.log('Profiles:', JSON.stringify(p))).catch(e => console.log('Error:', e.message)).finally(() => prisma.\$disconnect());
-"
+NAME=$(docker ps --format '{{.Names}}' | grep ellrcj5)
+echo "Container: $NAME"
+echo "---LOGS---"
+docker logs "$NAME" 2>&1 | tail -20
+echo "---MOUNTS---"
+docker inspect "$NAME" --format '{{json .Mounts}}'
+echo ""
+echo "---DATA---"
+docker exec "$NAME" ls -la /app/data/ 2>&1
+echo "---USER---"
+docker exec "$NAME" whoami 2>&1
