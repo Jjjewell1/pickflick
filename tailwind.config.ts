@@ -51,6 +51,12 @@ const config: Config = {
         "scale-in": "scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
         "fade-in-up": "fadeInUp 0.5s ease-out",
         "confetti-fall": "confettiFall 2s ease-out forwards",
+        "card-shuffle": "cardShuffle 0.12s ease-in-out",
+        "card-deal": "cardDeal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "card-flip-in": "cardFlipIn 0.5s ease-out forwards",
+        "card-wobble": "cardWobble 0.5s ease-in-out",
+        "deal-slide": "dealSlide 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "stack-settle": "stackSettle 0.3s ease-out",
       },
       keyframes: {
         floatKernel: {
@@ -72,6 +78,33 @@ const config: Config = {
         confettiFall: {
           "0%": { transform: "translateY(-100vh) rotate(0deg)", opacity: "1" },
           "100%": { transform: "translateY(100vh) rotate(720deg)", opacity: "0" },
+        },
+        cardShuffle: {
+          "0%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-8px) rotate(-2deg) scale(1.02)" },
+          "100%": { transform: "translateY(0) rotate(0deg)" },
+        },
+        cardDeal: {
+          "0%": { transform: "translateY(0) scale(1)" },
+          "60%": { transform: "translateY(-60px) scale(1.05)" },
+          "100%": { transform: "translateY(-30px) scale(1.08)" },
+        },
+        cardFlipIn: {
+          "0%": { transform: "perspective(800px) rotateY(90deg) scale(0.8)", opacity: "0" },
+          "100%": { transform: "perspective(800px) rotateY(0deg) scale(1)", opacity: "1" },
+        },
+        cardWobble: {
+          "0%, 100%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(-3deg)" },
+          "75%": { transform: "rotate(3deg)" },
+        },
+        dealSlide: {
+          "0%": { transform: "translateY(0) rotate(0deg) scale(1)", opacity: "1" },
+          "100%": { transform: "translateY(-120px) rotate(-5deg) scale(1.1)", opacity: "0" },
+        },
+        stackSettle: {
+          "0%": { transform: "translateY(-4px)" },
+          "100%": { transform: "translateY(0)" },
         },
       },
       backdropBlur: {

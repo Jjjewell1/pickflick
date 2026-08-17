@@ -90,9 +90,9 @@ export default function VoteScreen({
             >
               {nom.poster ? (
                 <img
-                  src={nom.poster}
+                  src={`/api/jellyfin/image?movieId=${nom.movieId}`}
                   alt={nom.title}
-                  className="w-12 h-16 object-cover rounded-lg flex-shrink-0"
+                  className="w-12 h-16 object-cover rounded-lg flex-shrink-0 bg-black/30"
                 />
               ) : (
                 <div className="w-12 h-16 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0 text-xl">

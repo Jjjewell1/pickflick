@@ -37,6 +37,14 @@ interface NominationEntry {
 
 type Step = "select" | "genre" | "nominate" | "vote" | "reveal";
 
+const STEP_META: Record<Step, { label: string; num: number }> = {
+  select: { label: "Who", num: 1 },
+  genre: { label: "Genre", num: 2 },
+  nominate: { label: "Pick", num: 3 },
+  vote: { label: "Vote", num: 4 },
+  reveal: { label: "Winner", num: 5 },
+};
+
 const ratingOrder = ["G", "PG", "PG-13", "R", "NC-17", "NR", ""];
 
 function getMaxRating(profiles: Profile[]): string {
@@ -280,6 +288,33 @@ export default function NightPage() {
       <Header />
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
+        {step !== "reveal" && (
+          <div className="flex items-center justify-center gap-1 mb-8">
+            {(Object.keys(STEP_META) as Step[]).map((s) => {
+              const meta = STEP_META[s];
+              const isCurrent = s === step;
+              const isPast = meta.num < STEP_META[step].num;
+              return (
+                <div key={s} className="flex items-center gap-1">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                    isCurrent
+                      ? "bg-theater-red text-white scale-110 shadow-lg shadow-theater-red/30"
+                      : isPast
+                        ? "bg-theater-gold/20 text-theater-gold border border-theater-gold/30"
+                        : "bg-white/5 text-white/20 border border-white/10"
+                  }`}>
+                    {isPast ? "✓" : meta.num}
+                  </div>
+                  {meta.num < 5 && (
+                    <div className={`w-6 h-0.5 rounded-full transition-all duration-300 ${
+                      isPast ? "bg-theater-gold/40" : "bg-white/10"
+                    }`} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
         {error && (
           <div className="glass-panel p-4 mb-6 border-red-500/30 bg-red-500/10">
             <p className="text-red-300 text-sm">{error}</p>
