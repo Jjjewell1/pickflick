@@ -9,4 +9,4 @@ DATABASE_URL="file:/app/data/pickflick.db" ./node_modules/.bin/prisma db push --
 chown -R nextjs:nodejs /app/data
 
 echo "Starting PickFlick..."
-exec node server.js
+exec su -s /bin/sh nextjs -c "exec node server.js"

@@ -34,7 +34,6 @@ RUN chmod +x /app/entrypoint.sh
 
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data /app
 
-USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV DATABASE_URL="file:/app/data/pickflick.db"
