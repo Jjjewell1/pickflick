@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import PopcornBackground from "@/components/PopcornBackground";
 import Header from "@/components/Header";
-import GenreWheel from "@/components/GenreWheel";
+import GenreDeck from "@/components/GenreDeck";
 import MovieBrowser from "@/components/MovieBrowser";
 import VoteScreen from "@/components/VoteScreen";
 import WinnerReveal from "@/components/WinnerReveal";
@@ -369,7 +369,7 @@ export default function NightPage() {
               Pick a Genre
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
-              Spin the wheel to tonight&apos;s genre
+              Shuffle the deck to tonight&apos;s genre
               {maxRating && (
                 <span className="block mt-1 text-amber-300/60">
                   Content ceiling: {maxRating}
@@ -382,7 +382,7 @@ export default function NightPage() {
                 Loading genres...
               </div>
             ) : (
-              <GenreWheel
+              <GenreDeck
                 genres={genres}
                 onGenreSelected={onGenreSelected}
                 canReroll={!rerollUsed}
@@ -420,14 +420,47 @@ export default function NightPage() {
               <>
                 <MovieBrowser
                   movies={movies}
-                  posterBaseUrl={process.env.NEXT_PUBLIC_JELLYFIN_URL || ""}
-                  nominations={nominations}
                   onNominate={handleNominate}
+                  nominations={nominations}
                   maxNominations={2}
                   currentNominations={Array.from(nominations.values()).filter(
                     (n) => n.profileId === currentNominator
                   ).length}
                 />
+
+                {nominations.size > 0 && (
+                  <div className="mt-6">
+                    <h3 className="font-display text-lg font-bold text-white mb-3">
+                      Nominated Movies ({nominations.size})
+                    </h3>
+                    <div className="space-y-2">
+                      {Array.from(nominations.entries()).map(([movieId, nom]) => (
+                        <div key={movieId} className="glass-panel p-3 flex items-center gap-3">
+                          <img
+                            src={`/api/jellyfin/image?movieId=${movieId}`}
+                            alt={nom.title}
+                            className="w-12 h-16 rounded object-cover bg-black/30"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white text-sm font-medium truncate">{nom.title}</p>
+                            <p className="text-white/40 text-xs">{nom.profileEmoji} {nom.profileName}</p>
+                          </div>
+                          {nom.profileId === currentNominator && (
+                            <button
+                              onClick={() => handleNominate({ Id: movieId, Name: nom.title } as JellyfinMovie)}
+                              className="text-red-400/60 hover:text-red-400 text-xs px-2 py-1 rounded hover:bg-red-500/10 transition-colors flex-shrink-0"
+                            >
+                              ✕ Remove
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="text-center mt-6">
                   <button onClick={finishNominating} className="btn-primary">

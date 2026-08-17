@@ -80,7 +80,6 @@ function MovieCard({ movie, posterUrl, nominated, onNominate }: MovieCardProps) 
 
 interface MovieBrowserProps {
   movies: Movie[];
-  posterBaseUrl: string;
   nominations: Map<string, { movieId: string; title: string; poster: string | null }>;
   onNominate: (movie: Movie) => void;
   maxNominations: number;
@@ -89,7 +88,6 @@ interface MovieBrowserProps {
 
 export default function MovieBrowser({
   movies,
-  posterBaseUrl,
   nominations,
   onNominate,
   maxNominations,
@@ -122,8 +120,8 @@ export default function MovieBrowser({
             key={movie.Id}
             movie={movie}
             posterUrl={
-              movie.Id && posterBaseUrl
-                ? `${posterBaseUrl}/Items/${movie.Id}/Images/Primary?maxWidth=300&quality=80`
+              movie.Id
+                ? `/api/jellyfin/image?movieId=${movie.Id}`
                 : ""
             }
             nominated={nominations.has(movie.Id)}
