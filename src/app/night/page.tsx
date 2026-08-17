@@ -8,6 +8,8 @@ import GenreDeck from "@/components/GenreDeck";
 import MovieBrowser from "@/components/MovieBrowser";
 import VoteScreen from "@/components/VoteScreen";
 import WinnerReveal from "@/components/WinnerReveal";
+import HowToModal from "@/components/HowToModal";
+import NominatorTransition from "@/components/NominatorTransition";
 
 interface Profile {
   id: string;
@@ -84,6 +86,8 @@ export default function NightPage() {
   const [winner, setWinner] = useState<JellyfinMovie | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showHowTo, setShowHowTo] = useState(false);
+  const [showTransition, setShowTransition] = useState(false);
 
   useEffect(() => {
     fetch("/api/profiles")
@@ -217,11 +221,16 @@ export default function NightPage() {
   const finishNominating = () => {
     const nextIndex = nominatorIndex + 1;
     if (nextIndex < selectedProfiles.length) {
-      setNominatorIndex(nextIndex);
-      setCurrentNominator(selectedProfiles[nextIndex].id);
+      setShowTransition(true);
     } else {
       setStep("vote");
     }
+  };
+
+  const handleTransitionReady = () => {
+    setShowTransition(false);
+    setNominatorIndex((prev) => prev + 1);
+    setCurrentNominator(selectedProfiles[nominatorIndex + 1].id);
   };
 
   const handleVote = (movieId: string, profileId: string) => {
@@ -285,7 +294,8 @@ export default function NightPage() {
   return (
     <div className="min-h-screen relative">
       <PopcornBackground />
-      <Header />
+      <Header onHowTo={() => setShowHowTo(true)} />
+      <HowToModal open={showHowTo} onClose={() => setShowHowTo(false)} />
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
         {step !== "reveal" && (
@@ -553,6 +563,14 @@ export default function NightPage() {
           </div>
         )}
       </main>
+
+      {showTransition && currentNomProfile && (
+        <NominatorTransition
+          profile={currentNomProfile}
+          isLast={nominatorIndex + 1 >= selectedProfiles.length - 1}
+          onReady={handleTransitionReady}
+        />
+      )}
     </div>
   );
 }

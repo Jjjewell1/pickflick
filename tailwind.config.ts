@@ -106,6 +106,10 @@ const config: Config = {
           "0%": { transform: "translateY(-4px)" },
           "100%": { transform: "translateY(0)" },
         },
+        pingRing: {
+          "0%": { transform: "scale(0.5)", opacity: "0.6" },
+          "100%": { transform: "scale(2)", opacity: "0" },
+        },
       },
       backdropBlur: {
         xs: "2px",

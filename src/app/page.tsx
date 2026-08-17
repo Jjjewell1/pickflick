@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PopcornBackground from "@/components/PopcornBackground";
 import PinPad from "@/components/PinPad";
+import HowToModal from "@/components/HowToModal";
 
 interface Profile {
   id: string;
@@ -19,6 +20,7 @@ export default function Home() {
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [pinError, setPinError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showHowTo, setShowHowTo] = useState(false);
 
   useEffect(() => {
     fetch("/api/profiles")
@@ -68,6 +70,7 @@ export default function Home() {
   return (
     <div className="min-h-screen relative flex flex-col">
       <PopcornBackground />
+      <HowToModal open={showHowTo} onClose={() => setShowHowTo(false)} />
 
       {!selectedProfile && (
         <header className="relative z-10 flex items-center justify-between px-6 py-5">
@@ -79,6 +82,12 @@ export default function Home() {
             </h1>
           </div>
           <nav className="flex items-center gap-1">
+            <button
+              onClick={() => setShowHowTo(true)}
+              className="px-3 py-1.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all"
+            >
+              How To
+            </button>
             <a href="/history" className="px-3 py-1.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all">
               History
             </a>
