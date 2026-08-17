@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  name      String
+  emoji     String   @default("🍿")
+  ageTier   String   @default("adult")
+  createdAt DateTime @default(now())
+
+  nominations Nomination[]
+  votes       Vote[]
+}
+
+model MovieNight {
+  id           String   @id @default(cuid())
+  date         DateTime @default(now())
+  genre        String
+  maxRating    String
+  winnerId     String?
+  winnerTitle  String?
+  winnerPoster String?
+  completed    Boolean  @default(false)
+
+  nominations Nomination[]
+  votes       Vote[]
+}
+
+model Nomination {
+  id        String   @id @default(cuid())
+  movieId   String
+  title     String
+  poster    String?
+  profileId String
+  nightId   String
+
+  profile Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  night   MovieNight @relation(fields: [nightId], references: [id], onDelete: Cascade)
+  votes   Vote[]
+
+  @@unique([movieId, nightId])
+}
+
+model Vote {
+  id           String   @id @default(cuid())
+  profileId    String
+  nightId      String
+  nominationId String
+  createdAt    DateTime @default(now())
+
+  profile    Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  night      MovieNight @relation(fields: [nightId], references: [id], onDelete: Cascade)
+  nomination Nomination @relation(fields: [nominationId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, nominationId])
+}

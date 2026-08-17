@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  pickflick:
+    image: pickflick:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pickflick
+    ports:
+      - "3000:3000"
+    environment:
+      - JELLYFIN_URL=${JELLYFIN_URL}
+      - JELLYFIN_API_KEY=${JELLYFIN_API_KEY}
+      - NEXT_PUBLIC_JELLYFIN_URL=${NEXT_PUBLIC_JELLYFIN_URL}
+      - DATABASE_URL=file:/app/data/pickflick.db
+    volumes:
+      - pickflick-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pickflick-data:
