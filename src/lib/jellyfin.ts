@@ -24,6 +24,11 @@ export interface JellyfinGenre {
   Name: string;
 }
 
+export interface JellyfinUser {
+  Id: string;
+  Name: string;
+}
+
 const ratingOrder = ["G", "PG", "PG-13", "R", "NC-17", "NR", ""];
 
 export function getMaxRating(participants: { ageTier: string }[]): string {
@@ -60,6 +65,41 @@ export function isRatingAllowed(
   return movieIdx <= maxIdx;
 }
 
+function getHeaders() {
+  return {
+    "X-Emby-Authorization": `MediaBrowser Token="${JELLYFIN_API_KEY}"`,
+    "Content-Type": "application/json",
+  };
+}
+
+let cachedUserId: string | null = null;
+
+async function getUserId(): Promise<string> {
+  if (cachedUserId) return cachedUserId;
+
+  if (!JELLYFIN_URL || !JELLYFIN_API_KEY) {
+    throw new Error("Jellyfin not configured. Set JELLYFIN_URL and JELLYFIN_API_KEY.");
+  }
+
+  const url = new URL("/Users", JELLYFIN_URL);
+  const res = await fetch(url.toString(), {
+    headers: getHeaders(),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Jellyfin API error fetching users: ${res.status} ${res.statusText}`);
+  }
+
+  const users = (await res.json()) as JellyfinUser[];
+  if (!users || users.length === 0) {
+    throw new Error("No Jellyfin users found. Create a user first.");
+  }
+
+  cachedUserId = users[0].Id;
+  return cachedUserId;
+}
+
 export async function jellyfinFetch<T>(
   endpoint: string,
   params?: Record<string, string>
@@ -70,7 +110,8 @@ export async function jellyfinFetch<T>(
     );
   }
 
-  const url = new URL(endpoint, JELLYFIN_URL);
+  const userId = await getUserId();
+  const url = new URL(endpoint.replace(":userId", userId), JELLYFIN_URL);
   if (params) {
     for (const [k, v] of Object.entries(params)) {
       url.searchParams.set(k, v);
@@ -78,10 +119,7 @@ export async function jellyfinFetch<T>(
   }
 
   const res = await fetch(url.toString(), {
-    headers: {
-      "X-Emby-Authorization": `MediaBrowser Token="${JELLYFIN_API_KEY}"`,
-      "Content-Type": "application/json",
-    },
+    headers: getHeaders(),
     cache: "no-store",
   });
 
@@ -108,7 +146,7 @@ export async function getMovies(
   }
 
   const response = await jellyfinFetch<JellyfinLibraryResponse>(
-    "/Users/Items",
+    "/Users/:userId/Items",
     params
   );
 
@@ -128,7 +166,7 @@ export async function getGenres(): Promise<string[]> {
   };
 
   const response = await jellyfinFetch<JellyfinLibraryResponse>(
-    "/Users/Items",
+    "/Users/:userId/Items",
     params
   );
 
