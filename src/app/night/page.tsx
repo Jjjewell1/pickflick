@@ -566,7 +566,9 @@ export default function NightPage() {
 
       {showTransition && currentNomProfile && (
         <NominatorTransition
-          profile={currentNomProfile}
+          currentProfile={selectedProfiles[nominatorIndex + 1]}
+          previousProfile={currentNomProfile}
+          remainingProfiles={selectedProfiles.slice(nominatorIndex + 1)}
           isLast={nominatorIndex + 1 >= selectedProfiles.length - 1}
           onReady={handleTransitionReady}
         />

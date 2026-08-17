@@ -110,6 +110,17 @@ const config: Config = {
           "0%": { transform: "scale(0.5)", opacity: "0.6" },
           "100%": { transform: "scale(2)", opacity: "0" },
         },
+        popcornBurst: {
+          "0%": { transform: "translate(0, 0) rotate(0deg) scale(0)", opacity: "1" },
+          "50%": { opacity: "1" },
+          "100%": { transform: "translate(calc(var(--endX) - 50%), var(--endY)) rotate(var(--rot)) scale(1)", opacity: "0" },
+        },
+        bounceIn: {
+          "0%": { transform: "scale(0) rotate(-15deg)", opacity: "0" },
+          "60%": { transform: "scale(1.15) rotate(3deg)", opacity: "1" },
+          "80%": { transform: "scale(0.95) rotate(-1deg)" },
+          "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
       },
       backdropBlur: {
         xs: "2px",
