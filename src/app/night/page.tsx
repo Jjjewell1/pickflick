@@ -109,8 +109,10 @@ export default function NightPage() {
       const params = new URLSearchParams({ action: "genres" });
       const res = await fetch(`/api/jellyfin?${params}`);
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to connect to Jellyfin");
+        const text = await res.text();
+        let msg = "Failed to connect to Jellyfin";
+        try { const d = JSON.parse(text); msg = d.error || msg; } catch {}
+        throw new Error(msg);
       }
       const data = await res.json();
       setGenres(data.genres || []);
@@ -136,8 +138,10 @@ export default function NightPage() {
         });
         const res = await fetch(`/api/jellyfin?${params}`);
         if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error || "Failed to fetch movies");
+          const text = await res.text();
+          let msg = "Failed to fetch movies";
+          try { const d = JSON.parse(text); msg = d.error || msg; } catch {}
+          throw new Error(msg);
         }
         const data = await res.json();
         setMovies(data.movies || []);
@@ -159,6 +163,12 @@ export default function NightPage() {
     try {
       const params = new URLSearchParams({ action: "genres" });
       const res = await fetch(`/api/jellyfin?${params}`);
+      if (!res.ok) {
+        const text = await res.text();
+        let msg = "Failed to reroll genres";
+        try { const d = JSON.parse(text); msg = d.error || msg; } catch {}
+        throw new Error(msg);
+      }
       const data = await res.json();
       setGenres(data.genres || []);
     } catch {
