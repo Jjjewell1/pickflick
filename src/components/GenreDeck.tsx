@@ -104,7 +104,7 @@ export default function GenreDeck({
   }, []);
 
   const shuffle = useCallback(() => {
-    if (phase !== "idle" || genres.length === 0) return;
+    if (phase === "shuffling" || phase === "dealing" || genres.length === 0) return;
 
     setPhase("shuffling");
     setShowFront(false);
@@ -138,7 +138,11 @@ export default function GenreDeck({
     }, speed);
   }, [phase, genres, onGenreSelected]);
 
-  const handleReroll = useCallback(() => {
+  const handleReshuffle = useCallback(() => {
+    shuffle();
+  }, [shuffle]);
+
+  const handleNewGenres = useCallback(() => {
     setPhase("idle");
     setShowFront(false);
     setDealtGenre(null);
@@ -306,12 +310,18 @@ export default function GenreDeck({
 
       {phase === "revealed" && (
         <div className="flex flex-col items-center gap-3 animate-fade-in-up">
+          <button
+            onClick={handleReshuffle}
+            className="btn-primary text-sm px-6 py-3"
+          >
+            🔀 Reshuffle
+          </button>
           {canReroll && (
             <button
-              onClick={handleReroll}
+              onClick={handleNewGenres}
               className="btn-secondary text-sm"
             >
-              🎲 Reroll Genre
+              🎲 New Genres
             </button>
           )}
         </div>
