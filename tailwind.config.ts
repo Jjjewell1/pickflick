@@ -57,6 +57,9 @@ const config: Config = {
         "card-wobble": "cardWobble 0.5s ease-in-out",
         "deal-slide": "dealSlide 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "stack-settle": "stackSettle 0.3s ease-out",
+        "bulb-blink": "bulbBlink 1s ease-in-out infinite",
+        "spotlight-sway": "spotlightSway 8s ease-in-out infinite",
+        "curtain-glow": "curtainGlow 3s ease-in-out infinite",
       },
       keyframes: {
         floatKernel: {
@@ -120,6 +123,18 @@ const config: Config = {
           "60%": { transform: "scale(1.15) rotate(3deg)", opacity: "1" },
           "80%": { transform: "scale(0.95) rotate(-1deg)" },
           "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
+        bulbBlink: {
+          "0%, 100%": { opacity: "0.2", boxShadow: "0 0 0px rgba(245, 197, 24, 0)" },
+          "50%": { opacity: "1", boxShadow: "0 0 8px rgba(245, 197, 24, 0.9), 0 0 16px rgba(245, 197, 24, 0.5)" },
+        },
+        spotlightSway: {
+          "0%, 100%": { transform: "rotate(-12deg)", opacity: "0.35" },
+          "50%": { transform: "rotate(12deg)", opacity: "0.6" },
+        },
+        curtainGlow: {
+          "0%, 100%": { opacity: "0.6" },
+          "50%": { opacity: "1" },
         },
       },
       backdropBlur: {
