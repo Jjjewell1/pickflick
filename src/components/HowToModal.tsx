@@ -11,7 +11,7 @@ const DEMO_STEPS = [
   { emoji: "👨‍👩‍👧‍👦", label: "Pick your crew", color: "from-emerald-500/30 to-emerald-900/30" },
   { emoji: "🔀", label: "Shuffle a genre", color: "from-theater-red/30 to-red-900/30" },
   { emoji: "🎬", label: "Nominate movies", color: "from-amber-500/30 to-amber-900/30" },
-  { emoji: "🗳️", label: "Everyone votes", color: "from-sky-500/30 to-sky-900/30" },
+  { emoji: "🥊", label: "Knockout battles", color: "from-sky-500/30 to-sky-900/30" },
   { emoji: "🎉", label: "Winner!", color: "from-purple-500/30 to-purple-900/30" },
 ];
 
@@ -157,16 +157,16 @@ export default function HowToModal({ open, onClose }: HowToModalProps) {
             />
             <InfoStep
               delay={300}
-              emoji="🗳️"
-              title="Vote for the winner"
-              desc="Tap your name, tap a movie. Tap again to change."
+              emoji="🥊"
+              title="Knockout battles!"
+              desc="Movies face off head-to-head. Majority advances — you can't vote your own pick!"
               accent="bg-purple-500/15 text-purple-300 border-purple-500/20"
             />
             <InfoStep
               delay={375}
               emoji="🏆"
               title="Confetti time!"
-              desc="Winner revealed with poster + Jellyfin link."
+              desc="Last movie standing wins. Poster + Jellyfin link."
               accent="bg-theater-gold/15 text-yellow-300 border-theater-gold/20"
               last
             />

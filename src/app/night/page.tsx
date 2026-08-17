@@ -6,7 +6,7 @@ import PopcornBackground from "@/components/PopcornBackground";
 import Header from "@/components/Header";
 import GenreDeck from "@/components/GenreDeck";
 import MovieBrowser from "@/components/MovieBrowser";
-import VoteScreen from "@/components/VoteScreen";
+import KnockoutScreen from "@/components/KnockoutScreen";
 import WinnerReveal from "@/components/WinnerReveal";
 import HowToModal from "@/components/HowToModal";
 import NominatorTransition from "@/components/NominatorTransition";
@@ -82,7 +82,13 @@ export default function NightPage() {
   const [nominations, setNominations] = useState<Map<string, NominationEntry>>(new Map());
   const [currentNominator, setCurrentNominator] = useState<string | null>(null);
   const [nominatorIndex, setNominatorIndex] = useState(0);
-  const [votes, setVotes] = useState<Map<string, Set<string>>>(new Map());
+  const [roundMovies, setRoundMovies] = useState<NominationEntry[]>([]);
+  const [matchIndex, setMatchIndex] = useState(0);
+  const [roundNumber, setRoundNumber] = useState(1);
+  const [matchVotes, setMatchVotes] = useState<Map<string, Set<string>>>(new Map());
+  const [allVotes, setAllVotes] = useState<Map<string, Set<string>>>(new Map());
+  const [resolvedWinners, setResolvedWinners] = useState<string[]>([]);
+  const [roundSplash, setRoundSplash] = useState<string | null>(null);
   const [winner, setWinner] = useState<JellyfinMovie | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -223,8 +229,36 @@ export default function NightPage() {
     if (nextIndex < selectedProfiles.length) {
       setShowTransition(true);
     } else {
-      setStep("vote");
+      startTournament();
     }
+  };
+
+  const startTournament = () => {
+    const shuffled = Array.from(nominations.values()).sort(() => Math.random() - 0.5);
+
+    if (shuffled.length === 1) {
+      crownWinner(shuffled[0].movieId);
+      return;
+    }
+
+    setRoundMovies(shuffled);
+    setMatchIndex(0);
+    setRoundNumber(1);
+    setMatchVotes(new Map());
+    setAllVotes(new Map());
+    setResolvedWinners([]);
+    setStep("vote");
+    splashRound(shuffled.length);
+  };
+
+  const splashRound = (count: number) => {
+    const label =
+      count === 2 ? "The Final" :
+      count <= 4 ? "Semi Finals" :
+      count <= 8 ? "Quarter Finals" :
+      `Round of ${count}`;
+    setRoundSplash(label);
+    setTimeout(() => setRoundSplash(null), 1500);
   };
 
   const handleTransitionReady = () => {
@@ -234,37 +268,60 @@ export default function NightPage() {
   };
 
   const handleVote = (movieId: string, profileId: string) => {
-    setVotes((prev) => {
-      const next = new Map(prev);
-      if (!next.has(movieId)) {
-        next.set(movieId, new Set());
-      }
+    const toggle = (map: Map<string, Set<string>>) => {
+      const next = new Map(map);
+      if (!next.has(movieId)) next.set(movieId, new Set());
       const voterSet = next.get(movieId)!;
-      if (voterSet.has(profileId)) {
-        voterSet.delete(profileId);
-      } else {
-        voterSet.add(profileId);
-      }
+      if (voterSet.has(profileId)) voterSet.delete(profileId);
+      else voterSet.add(profileId);
       return next;
-    });
+    };
+    setMatchVotes(toggle);
+    setAllVotes(toggle);
   };
 
-  const handleRevealWinner = async () => {
-    let bestMovieId = "";
-    let bestCount = 0;
+  const roundLabel = (count: number, round: number) =>
+    count === 2 ? "The Final" :
+    count <= 4 ? "Semi Finals" :
+    count <= 8 ? "Quarter Finals" :
+    `Round ${round}`;
 
-    for (const [movieId, voterSet] of Array.from(votes.entries())) {
-      if (voterSet.size > bestCount) {
-        bestCount = voterSet.size;
-        bestMovieId = movieId;
-      }
+  const handleAdvance = (winnerId: string) => {
+    const totalMatches = Math.ceil(roundMovies.length / 2);
+    const winners: NominationEntry[] = [];
+
+    // Recompute winners of resolved matches from accumulated logic:
+    // we track winners as we advance — store them in roundWinners
+    const roundWinnerIds = [...resolvedWinners, winnerId];
+    setResolvedWinners(roundWinnerIds);
+
+    if (matchIndex + 1 < totalMatches) {
+      setMatchIndex(matchIndex + 1);
+      setMatchVotes(new Map());
+      return;
     }
 
-    if (!bestMovieId && nominations.size > 0) {
-      bestMovieId = Array.from(nominations.keys())[0];
+    // Round complete — build next round from winners
+    for (const id of roundWinnerIds) {
+      const nom = roundMovies.find((n) => n.movieId === id);
+      if (nom) winners.push(nom);
     }
 
-    const movie = movies.find((m) => m.Id === bestMovieId);
+    if (winners.length <= 1) {
+      crownWinner(winnerId);
+      return;
+    }
+
+    setRoundMovies(winners);
+    setMatchIndex(0);
+    setResolvedWinners([]);
+    setMatchVotes(new Map());
+    setRoundNumber(roundNumber + 1);
+    splashRound(winners.length);
+  };
+
+  const crownWinner = async (winnerId: string) => {
+    const movie = movies.find((m) => m.Id === winnerId);
     setWinner(movie || null);
     setStep("reveal");
 
@@ -277,7 +334,7 @@ export default function NightPage() {
           maxRating,
           participants: Array.from(selectedIds),
           nominations: Array.from(nominations.values()),
-          votes: Array.from(votes.entries()).flatMap(([movieId, voterSet]) =>
+          votes: Array.from(allVotes.entries()).flatMap(([movieId, voterSet]) =>
             Array.from(voterSet).map((profileId) => ({ movieId, profileId }))
           ),
         }),
@@ -339,8 +396,8 @@ export default function NightPage() {
 
         {step === "select" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl font-bold text-white text-center mb-2">
-              Who&apos;s Watching?
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
+              Who&apos;s Watching? 👀
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
               Select tonight&apos;s participants
@@ -410,8 +467,8 @@ export default function NightPage() {
 
         {step === "genre" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl font-bold text-white text-center mb-2">
-              Pick a Genre
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
+              Pick a Genre 🃏
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
               Shuffle the deck to tonight&apos;s genre
@@ -439,8 +496,8 @@ export default function NightPage() {
 
         {step === "nominate" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl font-bold text-white text-center mb-2">
-              Nominate Movies
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
+              Nominate Movies 🍿
             </h2>
             <p className="text-white/40 text-center mb-2 text-sm">
               Genre: <span className="text-theater-gold">{genre}</span>
@@ -519,22 +576,45 @@ export default function NightPage() {
           </div>
         )}
 
-        {step === "vote" && (
+        {step === "vote" && roundMovies.length >= 2 && (
           <div className="animate-fade-in-up">
-            <VoteScreen
-              nominations={Array.from(nominations.values()).map((n, i) => ({
-                ...n,
-                id: `nom-${i}`,
-              }))}
+            <KnockoutScreen
+              movieA={roundMovies[matchIndex * 2]}
+              movieB={roundMovies[matchIndex * 2 + 1] || null}
               participants={selectedProfiles.map((p) => ({
                 id: p.id,
                 name: p.name,
                 emoji: p.emoji,
               }))}
-              votes={votes}
+              votes={matchVotes}
               onVote={handleVote}
-              onComplete={handleRevealWinner}
+              onAdvance={handleAdvance}
+              roundLabel={roundLabel(roundMovies.length, roundNumber)}
+              matchLabel={`Match ${matchIndex + 1} of ${Math.ceil(roundMovies.length / 2)}`}
+              isFinal={roundMovies.length === 2}
+              remainingCount={roundMovies.length}
             />
+          </div>
+        )}
+
+        {step === "vote" && roundMovies.length < 2 && (
+          <div className="text-center py-12 text-white/40">
+            Need at least 2 nominations to vote — go back and pick more!
+          </div>
+        )}
+
+        {roundSplash && (
+          <div className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+            <div className="relative text-center animate-scale-in">
+              <p className="text-theater-gold/60 text-xs uppercase tracking-[0.3em] mb-2">
+                Next up
+              </p>
+              <h2 className="font-display text-4xl sm:text-6xl font-black bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+                {roundSplash}
+              </h2>
+              <p className="text-5xl mt-4 animate-bounce">🍿</p>
+            </div>
           </div>
         )}
 
