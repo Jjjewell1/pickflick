@@ -163,6 +163,8 @@ export async function getGenres(): Promise<string[]> {
   const params: Record<string, string> = {
     IncludeItemTypes: "Movie",
     Recursive: "true",
+    Fields: "Genres",
+    Limit: "500",
   };
 
   const response = await jellyfinFetch<JellyfinLibraryResponse>(
