@@ -16,6 +16,8 @@ export default function VelvetCurtain() {
         />
         {/* Sheen */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/20" />
+        {/* Gold trim */}
+        <div className="absolute left-0 right-0 bottom-0 h-[3px] bg-gradient-to-r from-theater-gold/0 via-theater-gold/70 to-theater-gold/0" />
       </div>
 
       {/* Scalloped fringe */}

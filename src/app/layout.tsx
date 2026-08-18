@@ -54,7 +54,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#C41E3A",
+  themeColor: "#070919",
 };
 
 export default function RootLayout({
@@ -68,7 +68,7 @@ export default function RootLayout({
         <link rel="icon" href="/icon-192.png" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body className="min-h-screen bg-[#0B0D1E] text-white antialiased">
+      <body className="min-h-screen bg-[#070919] text-white antialiased">
         {children}
         <PwaInstall />
       </body>
