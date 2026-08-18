@@ -86,7 +86,6 @@ export default function NightPage() {
   const [matchIndex, setMatchIndex] = useState(0);
   const [roundNumber, setRoundNumber] = useState(1);
   const [matchVotes, setMatchVotes] = useState<Map<string, Set<string>>>(new Map());
-  const [allVotes, setAllVotes] = useState<Map<string, Set<string>>>(new Map());
   const [resolvedWinners, setResolvedWinners] = useState<string[]>([]);
   const [roundSplash, setRoundSplash] = useState<string | null>(null);
   const [winner, setWinner] = useState<JellyfinMovie | null>(null);
@@ -245,7 +244,6 @@ export default function NightPage() {
     setMatchIndex(0);
     setRoundNumber(1);
     setMatchVotes(new Map());
-    setAllVotes(new Map());
     setResolvedWinners([]);
     setStep("vote");
     splashRound(shuffled.length);
@@ -277,7 +275,6 @@ export default function NightPage() {
       return next;
     };
     setMatchVotes(toggle);
-    setAllVotes(toggle);
   };
 
   const roundLabel = (count: number, round: number) =>
