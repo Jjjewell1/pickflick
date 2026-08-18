@@ -31,6 +31,7 @@ export default function SettingsPage() {
   const [emoji, setEmoji] = useState("🍿");
   const [ageTier, setAgeTier] = useState("adult");
   const [pin, setPin] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -48,25 +49,46 @@ export default function SettingsPage() {
     }
   };
 
-  const addProfile = async () => {
+  const resetForm = () => {
+    setName("");
+    setEmoji("🍿");
+    setAgeTier("adult");
+    setPin("");
+    setEditingId(null);
+    setShowEmojiPicker(false);
+  };
+
+  const saveProfile = async () => {
     if (!name.trim()) return;
     setLoading(true);
 
     try {
-      await fetch("/api/profiles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      if (editingId) {
+        const body: Record<string, string> = {
+          id: editingId,
           name: name.trim(),
           emoji,
           ageTier,
-          pin: pin.length === 4 ? pin : "",
-        }),
-      });
-      setName("");
-      setEmoji("🍿");
-      setAgeTier("adult");
-      setPin("");
+        };
+        if (pin.length === 4) body.pin = pin;
+        await fetch("/api/profiles", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      } else {
+        await fetch("/api/profiles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            emoji,
+            ageTier,
+            pin: pin.length === 4 ? pin : "",
+          }),
+        });
+      }
+      resetForm();
       await fetchProfiles();
     } catch {
       // Silently fail
@@ -75,9 +97,32 @@ export default function SettingsPage() {
     }
   };
 
+  const editProfile = (p: Profile) => {
+    setName(p.name);
+    setEmoji(p.emoji);
+    setAgeTier(p.ageTier);
+    setPin("");
+    setEditingId(p.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const removePin = async (p: Profile) => {
+    try {
+      await fetch("/api/profiles", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: p.id, pin: "" }),
+      });
+      await fetchProfiles();
+    } catch {
+      // Silently fail
+    }
+  };
+
   const deleteProfile = async (id: string) => {
     try {
       await fetch(`/api/profiles?id=${id}`, { method: "DELETE" });
+      if (editingId === id) resetForm();
       await fetchProfiles();
     } catch {
       // Silently fail
@@ -102,7 +147,7 @@ export default function SettingsPage() {
 
         <div className="glass-panel p-6 mb-8">
           <h2 className="text-lg font-semibold text-white mb-4">
-            Add Household Member
+            {editingId ? "Edit Member" : "Add Household Member"}
           </h2>
 
           <div className="space-y-4">
@@ -170,7 +215,11 @@ export default function SettingsPage() {
 
             <div>
               <label className="block text-white/60 text-sm mb-1.5">
-                PIN <span className="text-white/30">(optional, 4 digits)</span>
+                {editingId ? (
+                  <>New PIN <span className="text-white/30">(leave blank to keep current)</span></>
+                ) : (
+                  <>PIN <span className="text-white/30">(optional, 4 digits)</span></>
+                )}
               </label>
               <input
                 type="password"
@@ -183,13 +232,23 @@ export default function SettingsPage() {
               />
             </div>
 
-            <button
-              onClick={addProfile}
-              disabled={!name.trim() || loading}
-              className="btn-primary w-full"
-            >
-              {loading ? "Adding..." : "Add Member"}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={saveProfile}
+                disabled={!name.trim() || loading}
+                className="btn-primary flex-1"
+              >
+                {loading ? "Saving..." : editingId ? "Save Changes" : "Add Member"}
+              </button>
+              {editingId && (
+                <button
+                  onClick={resetForm}
+                  className="btn-secondary"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -202,11 +261,17 @@ export default function SettingsPage() {
               {profiles.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-center gap-3 p-3 bg-white/5 rounded-xl"
+                  className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+                    editingId === p.id ? "bg-theater-magenta/10 ring-1 ring-theater-magenta/40" : "bg-white/5"
+                  }`}
                 >
                   <span className="text-2xl">{p.emoji}</span>
-                  <div className="flex-1">
-                    <p className="font-semibold text-white text-sm">{p.name}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-white text-sm truncate">{p.name}</p>
+                    <p className="text-white/30 text-xs">
+                      {p.ageTier}
+                      {p.pin && " · PIN 🔒"}
+                    </p>
                   </div>
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full border ${
@@ -216,10 +281,25 @@ export default function SettingsPage() {
                     {p.ageTier}
                   </span>
                   {p.pin && (
-                    <svg className="w-4 h-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
+                    <button
+                      onClick={() => removePin(p)}
+                      className="text-white/30 hover:text-amber-300 transition-colors p-1"
+                      title="Remove PIN"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 4v.01M12 11v4m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                      </svg>
+                    </button>
                   )}
+                  <button
+                    onClick={() => editProfile(p)}
+                    className="text-white/30 hover:text-theater-gold transition-colors p-1"
+                    title="Edit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
                   <button
                     onClick={() => deleteProfile(p.id)}
                     className="text-white/30 hover:text-red-400 transition-colors p-1"

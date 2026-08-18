@@ -4,13 +4,16 @@ import { prisma } from "@/lib/db";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { genre, maxRating, participants, nominations } = body;
+    const { genre, maxRating, participants, nominations, winnerId, winnerTitle, winnerPoster } = body;
 
     const night = await prisma.movieNight.create({
       data: {
         genre,
         maxRating: maxRating || "",
-        completed: false,
+        winnerId: winnerId || null,
+        winnerTitle: winnerTitle || null,
+        winnerPoster: winnerPoster || null,
+        completed: !!winnerId,
       },
     });
 
@@ -83,5 +86,21 @@ export async function GET() {
       { error: "Failed to fetch movie nights" },
       { status: 500 }
     );
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    await prisma.movieNight.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Failed to delete night" }, { status: 500 });
   }
 }

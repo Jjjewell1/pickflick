@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import PwaInstall from "@/components/PwaInstall";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pickflick.jewellcore.com";
 
@@ -69,6 +70,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[#0B0D1E] text-white antialiased">
         {children}
+        <PwaInstall />
       </body>
     </html>
   );

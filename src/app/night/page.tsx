@@ -337,6 +337,9 @@ export default function NightPage() {
           votes: Array.from(allVotes.entries()).flatMap(([movieId, voterSet]) =>
             Array.from(voterSet).map((profileId) => ({ movieId, profileId }))
           ),
+          winnerId: movie?.Id || winnerId,
+          winnerTitle: movie?.Name || null,
+          winnerPoster: winnerId ? `/api/jellyfin/image?movieId=${winnerId}` : null,
         }),
       });
     } catch {
