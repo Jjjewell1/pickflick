@@ -20,41 +20,41 @@ export default function Header({ onHowTo }: HeaderProps) {
         />
       </Link>
 
-      <nav className="flex items-center gap-2 sm:gap-3">
+      <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-lg">
         {onHowTo && (
           <button
             onClick={onHowTo}
-            className="px-3 py-1.5 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all"
+            className="px-4 py-1.5 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all"
           >
             How To
           </button>
         )}
         <Link
           href="/"
-          className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/"
               ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/5"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           Home
         </Link>
         <Link
           href="/history"
-          className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/history"
               ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/5"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           History
         </Link>
         <Link
           href="/settings"
-          className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/settings"
               ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/5"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           Settings

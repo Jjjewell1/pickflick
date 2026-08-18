@@ -12,8 +12,8 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         theater: {
-          red: "#F04848",
-          "red-dark": "#D83048",
+          red: "#E03060",
+          "red-dark": "#B82850",
           gold: "#F5C518",
           "gold-dark": "#D4A810",
           warm: "#1A0A0A",
@@ -31,13 +31,13 @@ const config: Config = {
       },
       fontFamily: {
         display: [
+          '"Bebas Neue"',
           "Georgia",
           "Cambria",
-          '"Times New Roman"',
-          "Times",
           "serif",
         ],
         body: [
+          "Inter",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",

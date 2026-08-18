@@ -47,7 +47,6 @@ export default function KnockoutScreen({
   const [winnerId, setWinnerId] = useState<string | null>(null);
   const [currentMatchId, setCurrentMatchId] = useState(movieA.movieId);
 
-  // New matchup — reset resolve state but keep the selected voter
   useEffect(() => {
     if (movieA.movieId !== currentMatchId) {
       setCurrentMatchId(movieA.movieId);
@@ -63,7 +62,6 @@ export default function KnockoutScreen({
   const totalVotes = countA + countB;
   const everyoneVoted = movieB ? totalVotes >= participants.length : true;
 
-  // A voter can't vote for their own nomination — unless BOTH movies are theirs
   const isLocked = (movie: Nomination, pid: string | null) => {
     if (!pid || !movieB) return false;
     const bothYours = movieA.profileId === pid && movieB.profileId === pid;
@@ -85,20 +83,20 @@ export default function KnockoutScreen({
     }
     setWinnerId(winner);
     setResolving(true);
-    setTimeout(() => onAdvance(winner), 1400);
+    setTimeout(() => onAdvance(winner), 1600);
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5" style={{ animation: "heroRise 0.6s ease-out both" }}>
       {/* Round header */}
       <div className="text-center">
-        <p className="text-theater-gold/80 text-xs uppercase tracking-[0.25em] font-bold mb-1">
+        <p className="text-theater-gold/70 text-xs uppercase tracking-[0.3em] font-bold mb-1">
           {roundLabel}
         </p>
-        <h2 className="text-2xl sm:text-3xl font-display font-bold bg-gradient-to-r from-theater-gold via-yellow-200 to-theater-gold bg-clip-text text-transparent">
-          {isFinal ? "The Final Showdown" : "Head-to-Head"}
+        <h2 className="font-display text-4xl sm:text-5xl tracking-wide bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+          {isFinal ? "THE FINAL SHOWDOWN" : "HEAD TO HEAD"}
         </h2>
-        <p className="text-white/40 text-xs mt-1">
+        <p className="text-white/30 text-xs mt-1">
           {matchLabel} · {remainingCount} {remainingCount === 1 ? "movie" : "movies"} left
         </p>
       </div>
@@ -129,15 +127,22 @@ export default function KnockoutScreen({
       </div>
 
       {/* The Arena */}
-      <div className="relative grid grid-cols-2 gap-3 sm:gap-6 items-stretch">
+      <div
+        className="relative grid grid-cols-2 gap-3 sm:gap-5 items-stretch p-3 sm:p-4 rounded-3xl"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(192,48,120,0.06) 0%, transparent 70%)",
+          animation: "arenaGlow 4s ease-in-out infinite",
+        }}
+      >
         {/* VS badge */}
         {movieB && (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
             <div
               className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-black text-lg sm:text-xl italic
                 bg-gradient-to-br from-theater-red via-red-500 to-theater-red-dark
-                border-2 border-theater-gold/50 shadow-xl shadow-theater-red/40
-                ${resolving ? "animate-pulse" : "animate-pulse-glow"}`}
+                border-2 border-theater-gold/50
+                ${resolving ? "animate-pulse scale-110" : ""}`}
+              style={!resolving ? { animation: "vsPulse 2.5s ease-in-out infinite" } : undefined}
             >
               <span className="text-white drop-shadow-md">VS</span>
             </div>
@@ -167,11 +172,11 @@ export default function KnockoutScreen({
             onPick={() => voterId && !resolving && onVote(movieB.movieId, voterId)}
           />
         ) : (
-          <div className="rounded-3xl border-2 border-dashed border-theater-gold/30 bg-theater-gold/5 flex flex-col items-center justify-center p-6 animate-fade-in-up">
-            <span className="text-5xl mb-3">🎟️</span>
-            <p className="text-theater-gold font-display font-bold text-lg">Bye</p>
-            <p className="text-white/40 text-xs text-center mt-1">
-              Odd number — this one advances automatically
+          <div className="rounded-3xl border-2 border-dashed border-theater-gold/20 bg-theater-gold/[0.03] flex flex-col items-center justify-center p-6">
+            <span className="text-5xl mb-3 opacity-60">🎟️</span>
+            <p className="text-theater-gold font-display text-xl tracking-wide opacity-70">BYE</p>
+            <p className="text-white/30 text-xs text-center mt-1">
+              Odd number — advances automatically
             </p>
           </div>
         )}
@@ -185,15 +190,20 @@ export default function KnockoutScreen({
           </p>
         )}
         {voterId && !everyoneVoted && !resolving && (
-          <p className="text-white/40 text-sm">
-            Waiting for everyone to vote...{" "}
-            <span className="text-theater-gold font-bold">
-              {totalVotes}/{participants.length}
-            </span>
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-white/40 text-sm">
+              Waiting for everyone to vote...
+            </p>
+            <div className="flex items-center gap-2">
+              <div className="loading-bar" />
+              <span className="text-theater-gold font-bold text-sm font-mono">
+                {totalVotes}/{participants.length}
+              </span>
+            </div>
+          </div>
         )}
         {everyoneVoted && !resolving && (
-          <button onClick={handleResolve} className="btn-primary animate-scale-in">
+          <button onClick={handleResolve} className="btn-primary" style={{ animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" }}>
             {isFinal ? "Crown the Winner 🏆" : "Advance Winner →"}
           </button>
         )}
@@ -232,46 +242,42 @@ function FighterCard({
     <button
       onClick={onPick}
       disabled={!voterId || locked || crowned}
-      className={`relative rounded-3xl overflow-hidden text-left transition-all duration-500 group
-        ${dimmed ? "opacity-25 scale-95 grayscale" : "opacity-100"}
-        ${crowned ? "scale-[1.04]" : ""}
-        ${voterId && !locked && !dimmed ? "cursor-pointer active:scale-[0.97]" : "cursor-default"}
+      className={`arena-card relative text-left
+        ${dimmed ? "arena-dimmed" : ""}
+        ${crowned ? "arena-crowned" : ""}
+        ${voterId && !locked && !dimmed ? "cursor-pointer" : "cursor-default"}
       `}
-      style={
-        crowned
-          ? { boxShadow: "0 0 40px rgba(245,197,24,0.5), 0 0 80px rgba(245,197,24,0.25)" }
-          : hasVoted
-            ? { boxShadow: "0 0 25px rgba(196,30,58,0.4)" }
-            : undefined
-      }
     >
       {/* Poster */}
-      <div className={`relative aspect-[2/3] rounded-3xl overflow-hidden border-2 transition-colors
-        ${crowned ? "border-theater-gold" : hasVoted ? "border-theater-red" : "border-white/15 group-hover:border-white/30"}`}>
+      <div className={`relative aspect-[2/3] rounded-3xl overflow-hidden border-2 transition-colors duration-300
+        ${crowned ? "border-theater-gold" : hasVoted ? "border-theater-red" : "border-white/10"}`}>
+
         <img
           src={`/api/jellyfin/image?movieId=${movie.movieId}`}
           alt={movie.title}
           className="w-full h-full object-cover"
         />
+
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
         {/* Crown on win */}
         {crowned && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 text-4xl animate-bounce drop-shadow-lg">
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 text-4xl" style={{ animation: "crownDrop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s both" }}>
             👑
           </div>
         )}
 
         {/* Locked badge */}
         {locked && (
-          <div className="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-sm text-[10px] font-bold text-white/60 flex items-center gap-1">
+          <div className="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-sm text-[10px] font-bold text-white/60 flex items-center gap-1 border border-white/10">
             🔒 Your pick
           </div>
         )}
 
         {/* Voted check */}
         {hasVoted && !crowned && (
-          <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-theater-red flex items-center justify-center shadow-lg animate-scale-in">
+          <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-theater-red flex items-center justify-center shadow-lg" style={{ animation: "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" }}>
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
@@ -280,7 +286,7 @@ function FighterCard({
 
         {/* Bottom info */}
         <div className="absolute bottom-0 inset-x-0 p-3">
-          <h3 className="font-display font-bold text-white text-sm sm:text-base leading-tight line-clamp-2 drop-shadow-md">
+          <h3 className="font-display text-lg sm:text-xl tracking-wide text-white leading-tight line-clamp-2 drop-shadow-lg">
             {movie.title}
           </h3>
           <p className="text-white/40 text-[10px] mt-0.5">
@@ -296,7 +302,8 @@ function FighterCard({
                   <span
                     key={pid}
                     title={voter?.name}
-                    className="w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-sm animate-scale-in"
+                    className="w-6 h-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-sm"
+                    style={{ animation: "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" }}
                   >
                     {voter?.emoji || "❓"}
                   </span>
@@ -304,6 +311,13 @@ function FighterCard({
               })}
           </div>
         </div>
+
+        {/* Hover glow overlay */}
+        {!dimmed && !crowned && (
+          <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl">
+            <div className="absolute inset-0 bg-gradient-to-t from-theater-red/10 via-transparent to-transparent" />
+          </div>
+        )}
       </div>
     </button>
   );

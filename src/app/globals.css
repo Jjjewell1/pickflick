@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --background: #070919;
+  --background: #060810;
   --foreground: #F5F0EB;
-  --theater-red: #F04848;
+  --theater-red: #E03060;
   --theater-gold: #F5C518;
   --brand-navy: #183060;
   --brand-indigo: #483078;
@@ -21,88 +21,237 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* ============================================================
+   Component layer — glassmorphism, buttons, cards
+   ============================================================ */
 @layer components {
   .glass-panel {
-    @apply bg-glass-medium backdrop-blur-xl border border-glass-border rounded-3xl shadow-lg;
+    @apply bg-glass-medium backdrop-blur-xl border border-glass-border rounded-3xl;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .glass-panel:hover {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(192, 48, 120, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .glass-panel-heavy {
-    @apply bg-glass-heavy backdrop-blur-2xl border border-glass-border rounded-3xl shadow-xl;
+    @apply bg-glass-heavy backdrop-blur-2xl border border-glass-border rounded-3xl;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 12px 48px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
+  /* Primary CTA — magenta glow */
   .btn-primary {
-    @apply px-8 py-4 text-white font-bold text-lg rounded-2xl
-           shadow-lg shadow-theater-magenta/30
-           hover:shadow-xl hover:shadow-theater-magenta/40
-           hover:scale-[1.03]
-           active:scale-[0.97] active:shadow-md
-           transition-all duration-200 ease-out
-           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
-    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #F04848 80%, #F06048 100%);
+    @apply px-8 py-4 text-white font-bold text-lg rounded-2xl relative overflow-hidden;
+    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #E03060 80%, #F06048 100%);
+    box-shadow:
+      0 4px 20px rgba(192, 48, 120, 0.35),
+      0 0 60px rgba(192, 48, 120, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  .btn-primary:hover {
+    box-shadow:
+      0 8px 32px rgba(192, 48, 120, 0.45),
+      0 0 80px rgba(192, 48, 120, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow:
+      0 2px 8px rgba(192, 48, 120, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition-duration: 0.08s;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-primary:disabled:hover {
+    transform: none;
+    box-shadow:
+      0 4px 20px rgba(192, 48, 120, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* Secondary — glassmorphism pill */
   .btn-secondary {
     @apply px-6 py-3 bg-glass-medium backdrop-blur-lg border border-glass-border
-           text-white font-semibold rounded-2xl
-           hover:bg-glass-heavy hover:scale-[1.03]
-           active:scale-[0.97]
-           transition-all duration-200 ease-out;
+           text-white font-semibold rounded-2xl;
+    box-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  .btn-secondary:hover {
+    @apply bg-glass-heavy;
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      0 0 30px rgba(192, 48, 120, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: 0.08s;
+  }
+
+  /* Gold CTA */
   .btn-gold {
-    @apply px-8 py-4 bg-theater-gold text-theater-warm font-bold text-lg rounded-2xl
-           shadow-lg shadow-theater-gold/30
-           hover:bg-theater-gold-dark hover:shadow-xl hover:shadow-theater-gold/40
-           hover:scale-[1.03]
-           active:scale-[0.97] active:shadow-md
-           transition-all duration-200 ease-out;
+    @apply px-8 py-4 bg-theater-gold text-theater-warm font-bold text-lg rounded-2xl;
+    box-shadow:
+      0 4px 20px rgba(245, 197, 24, 0.3),
+      0 0 60px rgba(245, 197, 24, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  .btn-gold:hover {
+    @apply bg-theater-gold-dark;
+    box-shadow:
+      0 8px 32px rgba(245, 197, 24, 0.4),
+      0 0 80px rgba(245, 197, 24, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  .btn-gold:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: 0.08s;
+  }
+
+  /* Glow text */
   .text-glow-red {
-    text-shadow: 0 0 20px rgba(196, 30, 58, 0.5), 0 0 40px rgba(196, 30, 58, 0.3);
+    text-shadow: 0 0 20px rgba(224, 48, 96, 0.5), 0 0 40px rgba(224, 48, 96, 0.3);
   }
 
   .text-glow-gold {
     text-shadow: 0 0 20px rgba(245, 197, 24, 0.5), 0 0 40px rgba(245, 197, 24, 0.3);
   }
 
+  .text-glow-magenta {
+    text-shadow: 0 0 20px rgba(192, 48, 120, 0.5), 0 0 40px rgba(192, 48, 120, 0.3);
+  }
+
+  /* Card glow states */
   .card-glow {
     box-shadow:
-      0 0 20px rgba(245, 197, 24, 0.15),
-      0 0 60px rgba(196, 30, 58, 0.1),
-      0 20px 40px rgba(0, 0, 0, 0.4);
+      0 0 20px rgba(192, 48, 120, 0.12),
+      0 0 60px rgba(192, 48, 120, 0.06),
+      0 20px 40px rgba(0, 0, 0, 0.5);
   }
 
   .card-glow-active {
     box-shadow:
       0 0 30px rgba(245, 197, 24, 0.3),
-      0 0 80px rgba(196, 30, 58, 0.2),
+      0 0 80px rgba(192, 48, 120, 0.15),
       0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Film-reel loading spinner */
+  .film-spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(192, 48, 120, 0.15);
+    border-top-color: var(--theater-red);
+    animation: filmSpin 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow:
+      0 0 12px rgba(192, 48, 120, 0.2),
+      inset 0 0 8px rgba(192, 48, 120, 0.1);
+  }
+
+  .film-spinner-sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  /* Cinematic loading bar */
+  .loading-bar {
+    width: 200px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .loading-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--theater-red), var(--theater-gold), transparent);
+    animation: loadingSweep 1.4s ease-in-out infinite;
+  }
+
+  /* Cinematic step indicator */
+  .step-dot {
+    @apply w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300;
+  }
+
+  .step-dot-current {
+    @apply text-white;
+    background: linear-gradient(135deg, #C03078, #E03060);
+    box-shadow: 0 0 20px rgba(192, 48, 120, 0.4), 0 0 40px rgba(192, 48, 120, 0.15);
+  }
+
+  .step-dot-done {
+    @apply bg-theater-gold/20 text-theater-gold border border-theater-gold/30;
+  }
+
+  .step-dot-pending {
+    @apply bg-white/5 text-white/20 border border-white/[0.08];
+  }
+
+  .step-connector {
+    @apply w-8 h-0.5 rounded-full transition-all duration-300;
   }
 }
 
+/* ============================================================
+   Utility layer — gradients, shimmer
+   ============================================================ */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
   .brand-gradient-text {
-    background-image: linear-gradient(135deg, #C03078 0%, #F04848 55%, #F06048 100%);
+    background-image: linear-gradient(135deg, #C03078 0%, #E03060 55%, #F06048 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .brand-gradient-bg {
-    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #F04848 80%, #F06048 100%);
+    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #E03060 80%, #F06048 100%);
   }
 
-  /* Animated gold shimmer text */
   .shimmer-text {
     background: linear-gradient(
       90deg,
@@ -119,14 +268,57 @@ body {
     color: transparent;
     animation: gradientShimmer 4s linear infinite;
   }
+
+  /* Stagger entrance utility */
+  .stagger-in {
+    animation: staggerFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
 }
 
 /* ============================================================
    Keyframes — raw CSS so inline-style animations always resolve.
-   (Tailwind only emits keyframes for used animation utilities,
-   so every name referenced via style={{ animation }} lives here.)
    ============================================================ */
 
+/* --- Core motion --- */
+@keyframes heroRise {
+  0% { opacity: 0; transform: translateY(26px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  0% { transform: translateY(30px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ticketIn {
+  0% { opacity: 0; transform: translateY(44px) rotate(-4deg) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  80% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes staggerFadeIn {
+  0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- Background effects --- */
 @keyframes floatKernel {
   0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
   50% { transform: translateY(-20px) rotate(15deg); opacity: 0.6; }
@@ -147,54 +339,23 @@ body {
   50% { transform: rotate(-16deg); opacity: 1; }
 }
 
-@keyframes fadeInUp {
-  0% { transform: translateY(30px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes glowDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.08); }
+  66% { transform: translate(-30px, 20px) scale(0.95); }
 }
 
-@keyframes heroRise {
-  0% { opacity: 0; transform: translateY(26px); }
-  100% { opacity: 1; transform: translateY(0); }
+@keyframes logoGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(192, 48, 120, 0.3)); }
+  50% { filter: drop-shadow(0 0 30px rgba(192, 48, 120, 0.65)); }
 }
 
-@keyframes ticketIn {
-  0% { opacity: 0; transform: translateY(44px) rotate(-4deg) scale(0.92); }
-  100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+@keyframes gradientShimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
 }
 
-@keyframes scaleIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes confettiFall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
-
-@keyframes pingRing {
-  0% { transform: scale(0.5); opacity: 0.6; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
-@keyframes popcornBurst {
-  0% { transform: translate(0, 0) rotate(0deg) scale(0); opacity: 1; }
-  50% { opacity: 1; }
-  100% { transform: translate(calc(var(--endX) - 50%), var(--endY)) rotate(var(--rot)) scale(1); opacity: 0; }
-}
-
-@keyframes bounceIn {
-  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-  60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
-  80% { transform: scale(0.95) rotate(-1deg); }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-
-@keyframes dealSlide {
-  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-  100% { transform: translateY(-120px) rotate(-5deg) scale(1.1); opacity: 0; }
-}
-
+/* --- Popcorn / particles --- */
 @keyframes popCorn {
   0% { transform: translateY(0) scale(1); opacity: 0.3; }
   30% { opacity: 0.45; }
@@ -213,14 +374,42 @@ body {
   100% { transform: translateY(-80px) rotate(25deg); opacity: 0; }
 }
 
-@keyframes logoGlowPulse {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(192, 48, 120, 0.3)); }
-  50% { filter: drop-shadow(0 0 30px rgba(192, 48, 120, 0.65)); }
+@keyframes popcornBurst {
+  0% { transform: translate(0, 0) rotate(0deg) scale(0); opacity: 1; }
+  50% { opacity: 1; }
+  100% { transform: translate(calc(var(--endX) - 50%), var(--endY)) rotate(var(--rot)) scale(1); opacity: 0; }
 }
 
-@keyframes gradientShimmer {
-  0% { background-position: 200% center; }
-  100% { background-position: -200% center; }
+@keyframes pingRing {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* --- Loading --- */
+@keyframes filmSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes loadingSweep {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(192, 48, 120, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(192, 48, 120, 0.6); }
+}
+
+/* --- Genre deck --- */
+@keyframes dealSlide {
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(-120px) rotate(-5deg) scale(1.1); opacity: 0; }
 }
 
 @keyframes shineSweep {
@@ -228,16 +417,64 @@ body {
   100% { transform: translateX(340%) skewX(-18deg); }
 }
 
-@keyframes glowDrift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(40px, -30px) scale(1.08); }
-  66% { transform: translate(-30px, 20px) scale(0.95); }
+/* --- Hero reveal (Phase 4) --- */
+@keyframes spotlightFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  40% { opacity: 0.4; }
+  100% { opacity: 0.15; }
+}
+
+@keyframes posterZoom {
+  0% { transform: scale(0.3) rotate(-8deg); opacity: 0; filter: brightness(3); }
+  40% { transform: scale(1.08) rotate(1deg); opacity: 1; filter: brightness(1.5); }
+  70% { transform: scale(0.98) rotate(-0.5deg); filter: brightness(1.1); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+}
+
+@keyframes crownDrop {
+  0% { transform: translateY(-80px) scale(1.4) rotate(-20deg); opacity: 0; }
+  60% { transform: translateY(6px) scale(1.05) rotate(3deg); opacity: 1; }
+  80% { transform: translateY(-3px) scale(0.97) rotate(-1deg); }
+  100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes burstRing {
+  0% { transform: scale(0.3); opacity: 0.8; border-width: 4px; }
+  100% { transform: scale(2.5); opacity: 0; border-width: 1px; }
+}
+
+@keyframes sparkleBurst {
+  0% { transform: translate(0, 0) scale(0); opacity: 1; }
+  50% { opacity: 1; }
+  100% { transform: translate(var(--sx), var(--sy)) scale(1); opacity: 0; }
+}
+
+@keyframes titleReveal {
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* --- Knockout --- */
+@keyframes vsPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(192, 48, 120, 0.4), 0 0 40px rgba(192, 48, 120, 0.15); }
+  50% { box-shadow: 0 0 30px rgba(245, 197, 24, 0.5), 0 0 60px rgba(245, 197, 24, 0.2); }
+}
+
+@keyframes arenaGlow {
+  0%, 100% { box-shadow: inset 0 0 60px rgba(192, 48, 120, 0.05); }
+  50% { box-shadow: inset 0 0 80px rgba(192, 48, 120, 0.1); }
+}
+
+@keyframes winnerGlow {
+  0% { box-shadow: 0 0 0px rgba(245, 197, 24, 0); }
+  50% { box-shadow: 0 0 50px rgba(245, 197, 24, 0.5), 0 0 100px rgba(245, 197, 24, 0.2); }
+  100% { box-shadow: 0 0 30px rgba(245, 197, 24, 0.3), 0 0 60px rgba(245, 197, 24, 0.1); }
 }
 
 /* ============================================================
    Ticket cards — premium cinema tickets with 3D tilt + shine
    ============================================================ */
-
 .ticket-card {
   position: relative;
   border-radius: 1.1rem;
@@ -247,7 +484,7 @@ body {
     rgba(245, 197, 24, 0.5),
     rgba(245, 197, 24, 0.1) 30%,
     rgba(192, 48, 120, 0.22) 65%,
-    rgba(240, 72, 72, 0.4)
+    rgba(224, 48, 96, 0.4)
   );
   transition:
     transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1),
@@ -263,7 +500,7 @@ body {
     rgba(245, 197, 24, 0.95),
     rgba(245, 197, 24, 0.2) 30%,
     rgba(192, 48, 120, 0.45) 65%,
-    rgba(240, 72, 72, 0.65)
+    rgba(224, 48, 96, 0.65)
   );
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.55),
@@ -279,11 +516,10 @@ body {
 .ticket-inner {
   position: relative;
   border-radius: calc(1.1rem - 1.5px);
-  background: linear-gradient(160deg, #251b47 0%, #151029 55%, #1c0e2c 100%);
+  background: linear-gradient(160deg, #1e1538 0%, #120d22 55%, #170e28 100%);
   overflow: hidden;
 }
 
-/* Glossy light sweep across the ticket on hover */
 .ticket-shine {
   position: absolute;
   inset: 0;
@@ -308,14 +544,13 @@ body {
   animation: shineSweep 0.85s ease forwards;
 }
 
-/* Punch notches on the stub tear line (stub is w-12 = 48px) */
 .ticket-punch {
   position: absolute;
   left: 40px;
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #070919;
+  background: var(--background);
   z-index: 20;
 }
 
@@ -329,7 +564,6 @@ body {
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.55);
 }
 
-/* Fake barcode edge */
 .ticket-barcode {
   width: 12px;
   height: 54px;
@@ -352,15 +586,91 @@ body {
   );
 }
 
-/* Respect reduced-motion preferences */
+/* ============================================================
+   Movie poster card — poster-forward with depth
+   ============================================================ */
+.poster-card {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1), box-shadow 0.3s ease;
+  will-change: transform;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.poster-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(192, 48, 120, 0.12);
+}
+
+.poster-card:active {
+  transform: translateY(-2px) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.poster-card-nominated {
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(245, 197, 24, 0.2);
+}
+
+.poster-card-nominated:hover {
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(245, 197, 24, 0.25);
+}
+
+/* ============================================================
+   Knockout arena
+   ============================================================ */
+.arena-card {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+  cursor: pointer;
+}
+
+.arena-card:hover:not(.arena-dimmed):not(.arena-crowned) {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.arena-card:active:not(.arena-dimmed):not(.arena-crowned) {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+.arena-dimmed {
+  opacity: 0.2;
+  transform: scale(0.95);
+  filter: grayscale(0.7) blur(1px);
+  pointer-events: none;
+}
+
+.arena-crowned {
+  transform: scale(1.04);
+  animation: winnerGlow 1.5s ease-out forwards;
+}
+
+/* ============================================================
+   Respect reduced-motion
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .ticket-card,
-  .ticket-card:hover {
+  .ticket-card:hover,
+  .poster-card,
+  .poster-card:hover,
+  .arena-card,
+  .arena-card:hover {
     transform: none;
   }
 
   .ticket-shine::after,
-  .shimmer-text {
+  .shimmer-text,
+  .film-spinner,
+  .loading-bar::after {
     animation: none;
   }
 }

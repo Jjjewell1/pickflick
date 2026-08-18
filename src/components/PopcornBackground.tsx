@@ -7,7 +7,7 @@ export default function PopcornBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {/* Deep theatre base */}
-      <div className="absolute inset-0 bg-[#070919]" />
+      <div className="absolute inset-0 bg-[#060810]" />
 
       {/* Center-stage spotlight wash from above */}
       <div

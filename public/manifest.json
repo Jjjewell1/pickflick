@@ -5,7 +5,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#070919",
+  "background_color": "#060810",
   "theme_color": "#C03078",
   "orientation": "portrait",
   "categories": ["entertainment"],

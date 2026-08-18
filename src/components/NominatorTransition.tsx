@@ -77,7 +77,7 @@ export default function NominatorTransition({
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-[#0B0D1E] transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-[#060810] transition-opacity duration-500 ${
           phase === "exit" ? "opacity-0" : "opacity-100"
         }`}
       />

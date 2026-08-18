@@ -68,6 +68,15 @@ function getMaxRating(profiles: Profile[]): string {
   return max;
 }
 
+function FilmLoader({ text }: { text: string }) {
+  return (
+    <div className="flex flex-col items-center gap-4 py-16">
+      <div className="film-spinner" />
+      <p className="text-white/40 text-sm">{text}</p>
+    </div>
+  );
+}
+
 export default function NightPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("select");
@@ -287,8 +296,6 @@ export default function NightPage() {
     const totalMatches = Math.ceil(roundMovies.length / 2);
     const winners: NominationEntry[] = [];
 
-    // Recompute winners of resolved matches from accumulated logic:
-    // we track winners as we advance — store them in roundWinners
     const roundWinnerIds = [...resolvedWinners, winnerId];
     setResolvedWinners(roundWinnerIds);
 
@@ -298,7 +305,6 @@ export default function NightPage() {
       return;
     }
 
-    // Round complete — build next round from winners
     for (const id of roundWinnerIds) {
       const nom = roundMovies.find((n) => n.movieId === id);
       if (nom) winners.push(nom);
@@ -360,26 +366,25 @@ export default function NightPage() {
       <HowToModal open={showHowTo} onClose={() => setShowHowTo(false)} />
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
+        {/* Step indicator — cinematic style */}
         {step !== "reveal" && (
-          <div className="flex items-center justify-center gap-1 mb-8">
+          <div className="flex items-center justify-center gap-1 mb-8" style={{ animation: "heroRise 0.6s ease-out both" }}>
             {(Object.keys(STEP_META) as Step[]).map((s) => {
               const meta = STEP_META[s];
               const isCurrent = s === step;
               const isPast = meta.num < STEP_META[step].num;
               return (
                 <div key={s} className="flex items-center gap-1">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                    isCurrent
-                      ? "bg-theater-red text-white scale-110 shadow-lg shadow-theater-red/30"
-                      : isPast
-                        ? "bg-theater-gold/20 text-theater-gold border border-theater-gold/30"
-                        : "bg-white/5 text-white/20 border border-white/10"
+                  <div className={`step-dot ${
+                    isCurrent ? "step-dot-current" :
+                    isPast ? "step-dot-done" :
+                    "step-dot-pending"
                   }`}>
                     {isPast ? "✓" : meta.num}
                   </div>
                   {meta.num < 5 && (
-                    <div className={`w-6 h-0.5 rounded-full transition-all duration-300 ${
-                      isPast ? "bg-theater-gold/40" : "bg-white/10"
+                    <div className={`step-connector ${
+                      isPast ? "bg-theater-gold/40" : "bg-white/[0.08]"
                     }`} />
                   )}
                 </div>
@@ -387,12 +392,13 @@ export default function NightPage() {
             })}
           </div>
         )}
+
         {error && (
           <div className="glass-panel p-4 mb-6 border-red-500/30 bg-red-500/10">
             <p className="text-red-300 text-sm">{error}</p>
             <button
               onClick={() => setError("")}
-              className="text-red-400/60 text-xs mt-1 hover:text-red-400"
+              className="text-red-400/60 text-xs mt-1 hover:text-red-400 transition-colors"
             >
               Dismiss
             </button>
@@ -401,8 +407,8 @@ export default function NightPage() {
 
         {step === "select" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
-              Who&apos;s Watching? 👀
+            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+              WHO&apos;S WATCHING?
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
               Select tonight&apos;s participants
@@ -423,7 +429,7 @@ export default function NightPage() {
             ) : (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
-                  {profiles.map((p) => {
+                  {profiles.map((p, i) => {
                     const isSelected = selectedIds.has(p.id);
                     const tierColors: Record<string, string> = {
                       kid: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
@@ -439,6 +445,9 @@ export default function NightPage() {
                             ? "ring-2 ring-theater-red bg-theater-red/10 scale-[1.05]"
                             : "hover:bg-white/5 hover:scale-[1.02]"
                         }`}
+                        style={{
+                          animation: `staggerFadeIn 0.5s cubic-bezier(0.22,1,0.36,1) ${0.06 * i}s both`,
+                        }}
                       >
                         <span className="text-3xl">{p.emoji}</span>
                         <span className="font-semibold text-white text-sm">
@@ -462,7 +471,12 @@ export default function NightPage() {
                     disabled={selectedIds.size === 0 || loading}
                     className="btn-primary"
                   >
-                    {loading ? "Loading..." : "Continue →"}
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <span className="film-spinner film-spinner-sm" />
+                        Loading...
+                      </span>
+                    ) : "Continue →"}
                   </button>
                 </div>
               </>
@@ -472,8 +486,8 @@ export default function NightPage() {
 
         {step === "genre" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
-              Pick a Genre 🃏
+            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+              PICK A GENRE
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
               Shuffle the deck to tonight&apos;s genre
@@ -485,9 +499,7 @@ export default function NightPage() {
             </p>
 
             {loading ? (
-              <div className="text-center py-12 text-white/40">
-                Loading genres...
-              </div>
+              <FilmLoader text="Loading genres..." />
             ) : (
               <GenreDeck
                 genres={genres}
@@ -501,8 +513,8 @@ export default function NightPage() {
 
         {step === "nominate" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
-              Nominate Movies 🍿
+            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+              NOMINATE MOVIES
             </h2>
             <p className="text-white/40 text-center mb-2 text-sm">
               Genre: <span className="text-theater-gold">{genre}</span>
@@ -520,9 +532,7 @@ export default function NightPage() {
             )}
 
             {loading ? (
-              <div className="text-center py-12 text-white/40">
-                Loading movies...
-              </div>
+              <FilmLoader text="Loading movies..." />
             ) : (
               <>
                 <MovieBrowser
@@ -537,16 +547,22 @@ export default function NightPage() {
 
                 {nominations.size > 0 && (
                   <div className="mt-6">
-                    <h3 className="font-display text-lg font-bold text-white mb-3">
-                      Nominated Movies ({nominations.size})
+                    <h3 className="font-display text-xl tracking-wide text-white mb-3">
+                      NOMINATED ({nominations.size})
                     </h3>
                     <div className="space-y-2">
-                      {Array.from(nominations.entries()).map(([movieId, nom]) => (
-                        <div key={movieId} className="glass-panel p-3 flex items-center gap-3">
+                      {Array.from(nominations.entries()).map(([movieId, nom], i) => (
+                        <div
+                          key={movieId}
+                          className="glass-panel p-3 flex items-center gap-3"
+                          style={{
+                            animation: `staggerFadeIn 0.4s cubic-bezier(0.22,1,0.36,1) ${0.05 * i}s both`,
+                          }}
+                        >
                           <img
                             src={`/api/jellyfin/image?movieId=${movieId}`}
                             alt={nom.title}
-                            className="w-12 h-16 rounded object-cover bg-black/30"
+                            className="w-12 h-16 rounded-lg object-cover bg-black/30 flex-shrink-0"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = "none";
                             }}
@@ -610,15 +626,15 @@ export default function NightPage() {
 
         {roundSplash && (
           <div className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-            <div className="relative text-center animate-scale-in">
-              <p className="text-theater-gold/60 text-xs uppercase tracking-[0.3em] mb-2">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
+            <div className="relative text-center" style={{ animation: "popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}>
+              <p className="text-theater-gold/60 text-xs uppercase tracking-[0.35em] mb-3">
                 Next up
               </p>
-              <h2 className="font-display text-4xl sm:text-6xl font-black bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+              <h2 className="font-display text-5xl sm:text-7xl tracking-wider bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-2xl">
                 {roundSplash}
               </h2>
-              <p className="text-5xl mt-4 animate-bounce">🍿</p>
+              <p className="text-5xl mt-4" style={{ animation: "bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both" }}>🍿</p>
             </div>
           </div>
         )}
