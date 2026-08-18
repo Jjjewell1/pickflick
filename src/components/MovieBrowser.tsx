@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Movie {
   Id: string;
@@ -93,8 +93,20 @@ export default function MovieBrowser({
   currentNominations,
 }: MovieBrowserProps) {
   const [search, setSearch] = useState("");
+  const [order, setOrder] = useState<Movie[]>(movies);
+  const [shuffling, setShuffling] = useState(false);
 
-  const filtered = movies.filter((m) =>
+  useEffect(() => {
+    setOrder(movies);
+  }, [movies]);
+
+  const shuffle = () => {
+    setShuffling(true);
+    setOrder([...order].sort(() => Math.random() - 0.5));
+    setTimeout(() => setShuffling(false), 400);
+  };
+
+  const filtered = order.filter((m) =>
     m.Name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -108,6 +120,13 @@ export default function MovieBrowser({
           placeholder="Search movies..."
           className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-theater-red/50 focus:border-transparent"
         />
+        <button
+          onClick={shuffle}
+          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-theater-gold/15 border border-theater-gold/30 text-theater-gold text-sm font-semibold hover:bg-theater-gold/25 active:scale-95 transition-all whitespace-nowrap"
+        >
+          <span className={`inline-block ${shuffling ? "animate-card-shuffle" : ""}`}>🔀</span>
+          Shuffle
+        </button>
         <span className="text-white/40 text-sm whitespace-nowrap">
           {currentNominations}/{maxNominations}
         </span>
