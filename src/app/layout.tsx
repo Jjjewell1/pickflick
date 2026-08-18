@@ -27,10 +27,11 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/opengraph-image",
+        url: `${siteUrl}/og.png`,
         width: 1200,
         height: 630,
         alt: "PickFlick theatre marquee — Movie night, decided together",
+        type: "image/png",
       },
     ],
   },
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     title: "PickFlick — Movie Night, Decided Together",
     description:
       "Shuffle a genre, nominate your flicks, and let the family battle it out head-to-head.",
-    images: ["/opengraph-image"],
+    images: [`${siteUrl}/og.png`],
   },
 };
 
