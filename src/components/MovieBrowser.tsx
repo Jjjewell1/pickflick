@@ -64,14 +64,13 @@ function MovieCard({ movie, posterUrl, nominated, onNominate }: MovieCardProps) 
         )}
         <button
           onClick={() => onNominate(movie)}
-          disabled={nominated}
           className={`mt-2 w-full text-xs py-1.5 rounded-xl font-medium transition-all ${
             nominated
-              ? "bg-theater-gold/20 text-theater-gold cursor-default"
+              ? "bg-red-500/20 text-red-300 hover:bg-red-500/30 active:scale-95"
               : "bg-theater-red/20 text-theater-red hover:bg-theater-red/30 active:scale-95"
           }`}
         >
-          {nominated ? "Nominated" : "+ Nominate"}
+          {nominated ? "✕ Remove" : "+ Nominate"}
         </button>
       </div>
     </div>
