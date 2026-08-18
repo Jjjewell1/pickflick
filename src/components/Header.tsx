@@ -13,13 +13,11 @@ export default function Header({ onHowTo }: HeaderProps) {
   return (
     <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4">
       <Link href="/" className="flex items-center group">
-        <span className="bg-[#F6F5F0] rounded-xl px-2 py-1.5 shadow-md group-hover:shadow-lg transition-shadow">
-          <img
-            src="/logo.png"
-            alt="PickFlick"
-            className="h-8 sm:h-9 w-auto object-contain"
-          />
-        </span>
+        <img
+          src="/logo.png"
+          alt="PickFlick"
+          className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(192,48,120,0.3)] group-hover:drop-shadow-[0_0_14px_rgba(192,48,120,0.5)] transition-all"
+        />
       </Link>
 
       <nav className="flex items-center gap-2 sm:gap-3">

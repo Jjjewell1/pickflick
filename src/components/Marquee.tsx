@@ -42,13 +42,11 @@ export default function Marquee() {
         <BulbRow count={26} />
 
         <div className="my-3 sm:my-4 flex justify-center">
-          <div className="bg-[#F6F5F0] rounded-2xl px-4 sm:px-8 py-4 sm:py-6 shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
-            <img
-              src="/logo.png"
-              alt="PickFlick — Your Movie Night, Solved"
-              className="h-24 sm:h-36 w-auto object-contain"
-            />
-          </div>
+          <img
+            src="/logo.png"
+            alt="PickFlick — Your Movie Night, Solved"
+            className="h-28 sm:h-40 w-auto object-contain drop-shadow-[0_0_20px_rgba(192,48,120,0.4)]"
+          />
         </div>
 
         <BulbRow count={26} reverse />

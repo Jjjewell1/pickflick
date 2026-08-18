@@ -102,3 +102,21 @@ body {
     background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #F04848 80%, #F06048 100%);
   }
 }
+
+@keyframes popCorn {
+  0% { transform: translateY(0) scale(1); opacity: 0.3; }
+  30% { opacity: 0.45; }
+  100% { transform: translateY(-120vh) scale(0.3); opacity: 0; }
+}
+
+@keyframes popBurst {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  15% { opacity: 0.5; }
+  100% { transform: translateY(-60vh) scale(1.2); opacity: 0; }
+}
+
+@keyframes bucketPop {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-80px) rotate(25deg); opacity: 0; }
+}
