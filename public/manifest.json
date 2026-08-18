@@ -3,13 +3,15 @@
   "short_name": "PickFlick",
   "description": "Pick a flick, together — movie night picker for Jellyfin",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0D0508",
   "theme_color": "#C41E3A",
   "orientation": "portrait",
   "categories": ["entertainment"],
   "icons": [
-    { "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

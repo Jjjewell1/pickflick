@@ -12,11 +12,15 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         theater: {
-          red: "#C41E3A",
-          "red-dark": "#9B1830",
+          red: "#F04848",
+          "red-dark": "#D83048",
           gold: "#F5C518",
           "gold-dark": "#D4A810",
           warm: "#1A0A0A",
+          navy: "#183060",
+          indigo: "#483078",
+          magenta: "#C03078",
+          orange: "#F06048",
         },
         glass: {
           light: "rgba(255, 255, 255, 0.08)",

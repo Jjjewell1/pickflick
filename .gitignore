@@ -42,3 +42,8 @@ next-env.d.ts
 
 pickflick
 session-*.md
+
+# logo source (derived assets committed in /public)
+/Logo.jpg
+/logo*.jpg
+

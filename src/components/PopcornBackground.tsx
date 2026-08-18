@@ -3,12 +3,12 @@
 export default function PopcornBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1A0510] via-[#0D0508] to-[#0A0305]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#14163A] via-[#0B0D1E] to-[#1A0F2E]" />
 
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 14 }).map((_, i) => (
         <div
           key={i}
-          className="absolute text-lg opacity-20 select-none"
+          className="absolute text-lg opacity-15 select-none"
           style={{
             left: `${(i * 8.3) % 100}%`,
             top: `${(i * 17 + 5) % 100}%`,
@@ -19,8 +19,9 @@ export default function PopcornBackground() {
         </div>
       ))}
 
-      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-theater-red/5 blur-[120px]" />
-      <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full bg-theater-gold/5 blur-[120px]" />
+      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-theater-magenta/15 blur-[130px]" />
+      <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full bg-theater-orange/15 blur-[130px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-theater-indigo/10 blur-[140px]" />
     </div>
   );
 }

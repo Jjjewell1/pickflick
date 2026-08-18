@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --background: #0D0508;
+  --background: #0B0D1E;
   --foreground: #F5F0EB;
-  --theater-red: #C41E3A;
+  --theater-red: #F04848;
   --theater-gold: #F5C518;
+  --brand-navy: #183060;
+  --brand-indigo: #483078;
+  --brand-magenta: #C03078;
+  --brand-coral: #F04848;
+  --brand-orange: #F06048;
 }
 
 * {
@@ -31,13 +36,14 @@ body {
   }
 
   .btn-primary {
-    @apply px-8 py-4 bg-theater-red text-white font-bold text-lg rounded-2xl
-           shadow-lg shadow-theater-red/30
-           hover:bg-theater-red-dark hover:shadow-xl hover:shadow-theater-red/40
+    @apply px-8 py-4 text-white font-bold text-lg rounded-2xl
+           shadow-lg shadow-theater-magenta/30
+           hover:shadow-xl hover:shadow-theater-magenta/40
            hover:scale-[1.03]
            active:scale-[0.97] active:shadow-md
            transition-all duration-200 ease-out
            disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
+    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #F04848 80%, #F06048 100%);
   }
 
   .btn-secondary {
@@ -83,5 +89,16 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .brand-gradient-text {
+    background-image: linear-gradient(135deg, #C03078 0%, #F04848 55%, #F06048 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .brand-gradient-bg {
+    background-image: linear-gradient(135deg, #483078 0%, #C03078 45%, #F04848 80%, #F06048 100%);
   }
 }

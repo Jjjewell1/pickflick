@@ -6,22 +6,26 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pickflick.jewellcor
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "PickFlick — Movie Night, Decided Together",
+    default: "PickFlick — Your Movie Night, Solved",
     template: "%s · PickFlick",
   },
   description:
-    "Pick a flick, together. A self-hosted movie night picker for your Jellyfin library — shuffle a genre, nominate movies, and battle head-to-head until one wins.",
+    "Pick a flick, together. Your movie night, solved — shuffle a genre, nominate movies, and battle head-to-head until one wins.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "PickFlick",
   },
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     url: siteUrl,
     siteName: "PickFlick",
-    title: "PickFlick — Movie Night, Decided Together",
+    title: "PickFlick — Your Movie Night, Solved",
     description:
       "Shuffle a genre, nominate your flicks, and let the family battle it out head-to-head. The fairest way to end movie night indecision.",
     locale: "en_US",
@@ -30,14 +34,14 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og.png`,
         width: 1200,
         height: 630,
-        alt: "PickFlick theatre marquee — Movie night, decided together",
+        alt: "PickFlick logo — Your Movie Night, Solved",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PickFlick — Movie Night, Decided Together",
+    title: "PickFlick — Your Movie Night, Solved",
     description:
       "Shuffle a genre, nominate your flicks, and let the family battle it out head-to-head.",
     images: [`${siteUrl}/og.png`],
@@ -60,10 +64,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/icon-192.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icon-192.svg" />
+        <link rel="icon" href="/icon-192.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body className="min-h-screen bg-[#0D0508] text-white antialiased">
+      <body className="min-h-screen bg-[#0B0D1E] text-white antialiased">
         {children}
       </body>
     </html>

@@ -12,10 +12,13 @@ export default function Header({ onHowTo }: HeaderProps) {
 
   return (
     <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4">
-      <Link href="/" className="flex items-center gap-2 group">
-        <span className="text-2xl">🎬</span>
-        <span className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-theater-gold transition-colors">
-          Pick<span className="text-theater-red">Flick</span>
+      <Link href="/" className="flex items-center group">
+        <span className="bg-[#F6F5F0] rounded-xl px-2 py-1.5 shadow-md group-hover:shadow-lg transition-shadow">
+          <img
+            src="/logo.png"
+            alt="PickFlick"
+            className="h-8 sm:h-9 w-auto object-contain"
+          />
         </span>
       </Link>
 

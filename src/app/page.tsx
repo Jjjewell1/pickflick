@@ -136,8 +136,8 @@ export default function Home() {
                   >
                     <div className="relative rounded-2xl border-2 border-theater-gold/50 bg-gradient-to-b from-[#2a0a12] to-[#120406] shadow-[0_8px_24px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_30px_rgba(245,197,24,0.3)] transition-shadow overflow-hidden">
                       {/* Punch holes */}
-                      <span className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0D0508] border border-theater-gold/40 z-10" />
-                      <span className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0D0508] border border-theater-gold/40 z-10" />
+                      <span className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0B0D1E] border border-theater-gold/40 z-10" />
+                      <span className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0B0D1E] border border-theater-gold/40 z-10" />
 
                       <div className="flex items-stretch">
                         {/* Stub — age tier */}
@@ -207,3 +207,4 @@ export default function Home() {
     </div>
   );
 }
+
