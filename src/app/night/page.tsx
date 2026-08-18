@@ -322,11 +322,15 @@ export default function NightPage() {
 
   const crownWinner = async (winnerId: string) => {
     const movie = movies.find((m) => m.Id === winnerId);
+    const nom = nominations.get(winnerId);
     setWinner(movie || null);
     setStep("reveal");
 
+    const title = movie?.Name || nom?.title || null;
+    const poster = winnerId ? `/api/jellyfin/image?movieId=${winnerId}` : null;
+
     try {
-      await fetch("/api/night", {
+      const res = await fetch("/api/night", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -334,16 +338,17 @@ export default function NightPage() {
           maxRating,
           participants: Array.from(selectedIds),
           nominations: Array.from(nominations.values()),
-          votes: Array.from(allVotes.entries()).flatMap(([movieId, voterSet]) =>
-            Array.from(voterSet).map((profileId) => ({ movieId, profileId }))
-          ),
-          winnerId: movie?.Id || winnerId,
-          winnerTitle: movie?.Name || null,
-          winnerPoster: winnerId ? `/api/jellyfin/image?movieId=${winnerId}` : null,
+          winnerId,
+          winnerTitle: title,
+          winnerPoster: poster,
         }),
       });
-    } catch {
-      // Silently fail — the reveal still works
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Failed to save night:", res.status, errText);
+      }
+    } catch (err) {
+      console.error("Network error saving night:", err);
     }
   };
 

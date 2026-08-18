@@ -98,9 +98,37 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
+    await prisma.vote.deleteMany({ where: { nightId: id } });
+    await prisma.nomination.deleteMany({ where: { nightId: id } });
     await prisma.movieNight.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete night" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, winnerId, winnerTitle, winnerPoster } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    const night = await prisma.movieNight.update({
+      where: { id },
+      data: {
+        winnerId: winnerId || null,
+        winnerTitle: winnerTitle || null,
+        winnerPoster: winnerPoster || null,
+        completed: true,
+      },
+    });
+
+    return NextResponse.json(night);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
