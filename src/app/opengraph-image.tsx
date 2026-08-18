@@ -71,8 +71,7 @@ export default async function Image() {
               flex: 1,
               display: "flex",
               background:
-                "repeating-linear-gradient(90deg, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 3px, transparent 3px, transparent 34px)",
-              opacity: 0.5,
+                "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 60%, rgba(0,0,0,0.25) 100%)",
             }}
           />
           {/* Scalloped fringe */}
