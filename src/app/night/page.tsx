@@ -651,6 +651,8 @@ export default function NightPage() {
               overview={winner.Overview || null}
               jellyfinUrl={process.env.NEXT_PUBLIC_JELLYFIN_URL || "#"}
               jellyfinItemId={winner.Id}
+              profiles={selectedProfiles}
+              genre={genre}
             />
 
             <div className="text-center mt-12">

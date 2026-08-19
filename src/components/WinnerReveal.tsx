@@ -8,6 +8,8 @@ interface WinnerRevealProps {
   overview: string | null;
   jellyfinUrl: string;
   jellyfinItemId: string;
+  profiles?: { name: string; ageTier: string }[];
+  genre?: string;
 }
 
 function Confetti() {
@@ -23,7 +25,7 @@ function Confetti() {
         ],
       size: 5 + Math.random() * 10,
       rotation: Math.random() * 360,
-      shape: i % 4, // 0=circle, 1=square, 2=triangle, 3=strip
+      shape: i % 4,
     })), []);
 
   return (
@@ -115,8 +117,12 @@ export default function WinnerReveal({
   overview,
   jellyfinUrl,
   jellyfinItemId,
+  profiles,
+  genre,
 }: WinnerRevealProps) {
   const [phase, setPhase] = useState<"flash" | "poster" | "title" | "done">("flash");
+  const [aiLine, setAiLine] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
     const timers = [
@@ -126,6 +132,23 @@ export default function WinnerReveal({
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
+
+  useEffect(() => {
+    if (phase !== "done" || !profiles?.length) return;
+
+    setAiLoading(true);
+    fetch("/api/ai/explain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, profiles, genre }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.line) setAiLine(data.line);
+      })
+      .catch(() => {})
+      .finally(() => setAiLoading(false));
+  }, [phase, title, profiles, genre]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] relative">
@@ -154,7 +177,7 @@ export default function WinnerReveal({
           The winner is...
         </p>
 
-        {/* Poster — the hero */}
+        {/* Poster */}
         {poster && (
           <div
             className="relative mx-auto mb-8 w-52 sm:w-64 aspect-[2/3] rounded-2xl overflow-hidden"
@@ -169,7 +192,6 @@ export default function WinnerReveal({
               alt={title}
               className="w-full h-full object-cover"
             />
-            {/* Gold vignette overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-theater-gold/10 pointer-events-none" />
           </div>
         )}
@@ -199,6 +221,25 @@ export default function WinnerReveal({
         >
           {title}
         </h1>
+
+        {/* AI one-liner */}
+        {(aiLine || aiLoading) && (
+          <div
+            className="mb-6 px-4"
+            style={{
+              animation: phase === "done" ? "titleReveal 0.6s ease-out 0.3s both" : "none",
+              opacity: phase === "done" ? undefined : 0,
+            }}
+          >
+            {aiLoading ? (
+              <p className="text-white/25 text-sm italic">The committee is deliberating...</p>
+            ) : (
+              <p className="text-white/45 text-sm italic text-center max-w-md">
+                &ldquo;{aiLine}&rdquo;
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Overview */}
         {overview && (

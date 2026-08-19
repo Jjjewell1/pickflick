@@ -7,6 +7,7 @@ import PinPad from "@/components/PinPad";
 import HowToModal from "@/components/HowToModal";
 import Header from "@/components/Header";
 import VelvetCurtain from "@/components/VelvetCurtain";
+import AiPicks from "@/components/AiPicks";
 
 interface Profile {
   id: string;
@@ -214,6 +215,19 @@ export default function Home() {
                 <span className="text-theater-gold/40 text-[8px]">◆</span>
                 <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
               </div>
+
+              {/* AI Picks */}
+              {profiles.length > 0 && (
+                <div className="mb-8">
+                  <AiPicks
+                    profiles={profiles.map((p) => ({
+                      name: p.name,
+                      ageTier: p.ageTier,
+                      emoji: p.emoji,
+                    }))}
+                  />
+                </div>
+              )}
 
               {/* Profile tickets */}
               {profiles.length === 0 ? (
