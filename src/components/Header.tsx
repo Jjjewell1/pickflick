@@ -11,55 +11,53 @@ export default function Header({ onHowTo }: HeaderProps) {
   const pathname = usePathname();
 
   return (
-    <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4">
-      <Link href="/" className="flex items-center group">
-        <img
-          src="/logo.png"
-          alt="PickFlick"
-          className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(192,48,120,0.3)] group-hover:drop-shadow-[0_0_14px_rgba(192,48,120,0.5)] transition-all"
-        />
-      </Link>
+    <header className="relative z-30 mx-4 sm:mx-6 mt-6 sm:mt-8">
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
+          <img
+            src="/logo.png"
+            alt="PickFlick"
+            className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_6px_rgba(192,48,120,0.3)] group-hover:drop-shadow-[0_0_12px_rgba(192,48,120,0.5)] transition-all duration-300"
+          />
+          <span className="font-display text-xs sm:text-sm font-bold text-white/50 tracking-widest hidden sm:inline group-hover:text-white/70 transition-colors">
+            BOX OFFICE
+          </span>
+        </Link>
 
-      <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-lg">
-        {onHowTo && (
-          <button
-            onClick={onHowTo}
-            className="px-4 py-1.5 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all"
-          >
-            How To
-          </button>
-        )}
-        <Link
-          href="/"
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-            pathname === "/"
-              ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          Home
-        </Link>
-        <Link
-          href="/history"
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-            pathname === "/history"
-              ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          History
-        </Link>
-        <Link
-          href="/settings"
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-            pathname === "/settings"
-              ? "bg-theater-red/20 text-theater-red"
-              : "text-white/60 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          Settings
-        </Link>
-      </nav>
+        {/* Nav */}
+        <nav className="flex items-center gap-0.5">
+          {onHowTo && (
+            <button
+              onClick={onHowTo}
+              className="relative px-3 sm:px-4 py-2 rounded-xl text-sm font-medium text-white/40 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+            >
+              How To
+            </button>
+          )}
+          <NavLink href="/" label="Home" active={pathname === "/"} />
+          <NavLink href="/history" label="History" active={pathname === "/history"} />
+          <NavLink href="/settings" label="Settings" active={pathname === "/settings"} />
+        </nav>
+      </div>
     </header>
+  );
+}
+
+function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`relative px-3 sm:px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+        active
+          ? "text-theater-gold bg-theater-gold/10"
+          : "text-white/40 hover:text-white hover:bg-white/[0.06]"
+      }`}
+    >
+      {label}
+      {active && (
+        <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-theater-gold shadow-[0_0_6px_rgba(245,197,24,0.6)]" />
+      )}
+    </Link>
   );
 }

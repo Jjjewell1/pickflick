@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import PopcornBackground from "@/components/PopcornBackground";
 import PinPad from "@/components/PinPad";
 import HowToModal from "@/components/HowToModal";
-import Marquee from "@/components/Marquee";
+import Header from "@/components/Header";
 import VelvetCurtain from "@/components/VelvetCurtain";
 
 interface Profile {
@@ -187,49 +187,14 @@ export default function Home() {
 
       {!selectedProfile ? (
         <>
-          {/* Top bar — glass pill nav */}
-          <header
-            className="relative z-30 flex items-center justify-between px-5 py-3 mt-16 sm:mt-20"
-            style={{ animation: "heroRise 0.7s ease-out both" }}
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🎟️</span>
-              <span className="font-display text-sm font-bold text-white/60 tracking-wide hidden sm:inline">
-                Box Office
-              </span>
-            </div>
+          <Header onHowTo={() => setShowHowTo(true)} />
 
-            <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-lg">
-              <button
-                onClick={() => setShowHowTo(true)}
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
-              >
-                How To
-              </button>
-              <a
-                href="/history"
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
-              >
-                History
-              </a>
-              <a
-                href="/settings"
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
-              >
-                Settings
-              </a>
-            </nav>
-          </header>
-
-          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-12 pt-2">
+          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-12 pt-4">
             <div className="w-full max-w-3xl flex flex-col items-center">
-              {/* Hero marquee */}
-              <Marquee />
-
               {/* NOW SHOWING divider */}
               <div
-                className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mt-8 mb-6"
-                style={{ animation: "heroRise 0.7s ease-out 0.25s both" }}
+                className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mb-6"
+                style={{ animation: "heroRise 0.7s ease-out 0.1s both" }}
               >
                 <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-theater-gold/50" />
                 <span className="flex items-center gap-2.5">
@@ -246,7 +211,7 @@ export default function Home() {
               {profiles.length === 0 ? (
                 <div
                   className="glass-panel p-10 text-center max-w-sm"
-                  style={{ animation: "heroRise 0.7s ease-out 0.4s both" }}
+                  style={{ animation: "heroRise 0.7s ease-out 0.2s both" }}
                 >
                   <p className="text-5xl mb-4">🍿</p>
                   <p className="text-white/50 mb-6 text-sm">
@@ -276,7 +241,7 @@ export default function Home() {
               {/* Hint */}
               <p
                 className="mt-8 text-white/30 text-xs flex items-center gap-2"
-                style={{ animation: "heroRise 0.7s ease-out 0.9s both" }}
+                style={{ animation: "heroRise 0.7s ease-out 0.5s both" }}
               >
                 <span className="inline-block animate-bounce">🎟️</span>
                 Tap a ticket to start the show
