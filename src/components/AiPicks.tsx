@@ -17,6 +17,15 @@ interface AiPicksProps {
   onSelect?: (movieId: string, title: string) => void;
 }
 
+function cleanTitle(name: string): string {
+  return name
+    .replace(/\s*\(\d{4}\)\s*/g, "")
+    .replace(/\[.*?\]/g, "")
+    .replace(/\.\w{2,4}$/i, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
   const [picks, setPicks] = useState<AiSuggestion[]>([]);
   const [loading, setLoading] = useState(false);
@@ -58,7 +67,7 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
       style={{ animation: "heroRise 0.7s ease-out 0.15s both" }}
     >
       {/* Section header */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-5">
         <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/8" />
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black tracking-[0.3em] uppercase text-theater-gold/60">
@@ -70,9 +79,14 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
 
       {/* Loading state */}
       {loading && (
-        <div className="flex items-center justify-center gap-3 py-8">
-          <div className="film-spinner" />
-          <p className="text-white/30 text-sm">Finding the perfect picks...</p>
+        <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-hide">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex-shrink-0 w-[140px] sm:w-[160px]">
+              <div className="aspect-[2/3] rounded-xl bg-white/[0.04] border border-white/[0.06] animate-pulse" />
+              <div className="mt-2 h-3 bg-white/[0.04] rounded-full w-3/4 animate-pulse" />
+              <div className="mt-1.5 h-2.5 bg-white/[0.03] rounded-full w-1/2 animate-pulse" />
+            </div>
+          ))}
         </div>
       )}
 
@@ -89,9 +103,9 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
         </div>
       )}
 
-      {/* Empty state — show button to trigger */}
+      {/* Trigger button */}
       {!hasLoaded && !loading && !error && (
-        <div className="text-center py-6">
+        <div className="text-center py-4">
           <button
             onClick={fetchPicks}
             className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.08] hover:border-theater-gold/40 hover:bg-theater-gold/[0.06] transition-all duration-300"
@@ -107,36 +121,52 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
         </div>
       )}
 
-      {/* Picks grid */}
+      {/* Picks — poster cards with glass info strip below */}
       {picks.length > 0 && !loading && (
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+        <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide">
           {picks.map((pick, i) => (
             <button
               key={pick.id}
               onClick={() => onSelect?.(pick.id, pick.name)}
-              className="group flex-shrink-0 w-[140px] sm:w-[160px]"
+              className="group flex-shrink-0 w-[140px] sm:w-[160px] text-left"
               style={{ animation: `ticketIn 0.5s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.08}s both` }}
             >
-              <div className="relative aspect-[2/3] rounded-xl overflow-hidden mb-2 border border-white/[0.06] group-hover:border-theater-gold/40 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_20px_rgba(245,197,24,0.1)]">
+              {/* Poster */}
+              <div className="relative aspect-[2/3] rounded-t-xl overflow-hidden bg-white/[0.03]">
                 <img
                   src={pick.poster}
                   alt={pick.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                {/* Subtle bottom fade only — no heavy overlay */}
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
 
-                {/* Rating badge */}
+                {/* Rating pill — top right */}
                 {pick.communityRating && (
-                  <span className="absolute top-1.5 right-1.5 text-[9px] font-bold bg-black/60 backdrop-blur-sm px-1.5 py-0.5 rounded-md text-theater-gold/90 border border-theater-gold/20">
+                  <span className="absolute top-2 right-2 flex items-center gap-0.5 text-[10px] font-bold bg-black/70 backdrop-blur-md px-2 py-0.5 rounded-full text-theater-gold border border-theater-gold/30 shadow-lg">
                     ★ {pick.communityRating.toFixed(1)}
                   </span>
                 )}
+              </div>
 
-                {/* Title overlay */}
-                <span className="absolute bottom-0 left-0 right-0 px-2 py-2 text-[11px] font-semibold text-white/80 leading-tight line-clamp-2">
-                  {pick.name}
-                </span>
+              {/* Info strip */}
+              <div className="bg-white/[0.04] backdrop-blur-sm border border-white/[0.06] border-t-0 rounded-b-xl px-2.5 py-2">
+                <p className="font-display text-[13px] font-bold text-white/90 leading-tight line-clamp-1 group-hover:text-theater-gold transition-colors">
+                  {cleanTitle(pick.name)}
+                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  {pick.rating && (
+                    <span className="text-[9px] font-bold text-white/30 bg-white/[0.06] px-1.5 py-0.5 rounded">
+                      {pick.rating}
+                    </span>
+                  )}
+                  {pick.genres && pick.genres[0] && (
+                    <span className="text-[9px] text-white/25 truncate">
+                      {pick.genres[0]}
+                    </span>
+                  )}
+                </div>
               </div>
             </button>
           ))}
