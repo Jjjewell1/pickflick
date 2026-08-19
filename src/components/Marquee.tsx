@@ -32,7 +32,7 @@ function BulbRow({ count, reverse }: { count: number; reverse?: boolean }) {
 export default function Marquee() {
   return (
     <div
-      className="relative select-none w-full max-w-lg mx-auto"
+      className="relative select-none w-full max-w-xl mx-auto"
       style={{ animation: "heroRise 0.9s cubic-bezier(0.22,1,0.36,1) both" }}
     >
       {/* Outer glow halo */}
@@ -53,7 +53,7 @@ export default function Marquee() {
           <img
             src="/logo.png"
             alt="PickFlick"
-            className="relative h-32 sm:h-44 md:h-52 w-auto object-contain drop-shadow-[0_0_30px_rgba(192,48,120,0.4)]"
+            className="relative h-48 sm:h-60 md:h-72 w-auto object-contain drop-shadow-[0_0_30px_rgba(192,48,120,0.4)]"
             style={{ animation: "logoGlowPulse 4s ease-in-out infinite" }}
           />
         </div>
