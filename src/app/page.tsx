@@ -16,10 +16,10 @@ interface Profile {
   pin: string;
 }
 
-const TIER_META: Record<string, { label: string; color: string }> = {
-  kid: { label: "KID", color: "text-emerald-300" },
-  teen: { label: "TEEN", color: "text-amber-300" },
-  adult: { label: "ADULT", color: "text-sky-300" },
+const TIER_META: Record<string, { label: string; color: string; accent: string; glow: string }> = {
+  kid: { label: "KID", color: "text-emerald-300", accent: "bg-emerald-400/15", glow: "rgba(52,211,153,0.08)" },
+  teen: { label: "TEEN", color: "text-amber-300", accent: "bg-amber-400/15", glow: "rgba(251,191,36,0.08)" },
+  adult: { label: "ADULT", color: "text-sky-300", accent: "bg-sky-400/15", glow: "rgba(56,189,248,0.08)" },
 };
 
 function TicketCard({
@@ -41,8 +41,8 @@ function TicketCard({
     >
       <button onClick={onClick} className="ticket-card group w-full">
         <div className="ticket-inner flex items-stretch min-h-[136px]">
-          {/* Stub */}
-          <div className="relative w-12 flex flex-col items-center justify-center gap-1.5 border-r border-dashed border-theater-gold/25 flex-shrink-0">
+          {/* Stub — tier-tinted */}
+          <div className={`relative w-12 flex flex-col items-center justify-center gap-1.5 border-r border-dashed border-theater-gold/25 flex-shrink-0 ${tier.accent}`}>
             <span className={`text-[10px] font-black tracking-widest ${tier.color}`}>
               {tier.label}
             </span>
@@ -97,6 +97,12 @@ function TicketCard({
 
           {/* Shine sweep */}
           <span className="ticket-shine" />
+
+          {/* Tier glow on hover */}
+          <div
+            className="absolute inset-0 rounded-[1.1rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{ boxShadow: `inset 0 0 30px ${tier.glow}` }}
+          />
         </div>
       </button>
     </div>
@@ -189,22 +195,24 @@ export default function Home() {
         <>
           <Header onHowTo={() => setShowHowTo(true)} />
 
-          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-12 pt-4">
+          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-12 pt-6">
             <div className="w-full max-w-3xl flex flex-col items-center">
-              {/* NOW SHOWING divider */}
+              {/* Tagline */}
+              <p
+                className="text-center text-white/30 text-sm sm:text-base mb-2"
+                style={{ animation: "heroRise 0.7s ease-out 0.05s both" }}
+              >
+                Pick a flick, together.
+              </p>
+
+              {/* Subtle divider */}
               <div
-                className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mb-6"
+                className="flex items-center gap-3 w-full max-w-xs mb-8"
                 style={{ animation: "heroRise 0.7s ease-out 0.1s both" }}
               >
-                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-theater-gold/50" />
-                <span className="flex items-center gap-2.5">
-                  <span className="text-theater-gold/50 text-xs">✦</span>
-                  <span className="shimmer-text text-xs sm:text-sm font-bold uppercase tracking-[0.35em]">
-                    Now Showing
-                  </span>
-                  <span className="text-theater-gold/50 text-xs">✦</span>
-                </span>
-                <span className="h-px flex-1 bg-gradient-to-l from-transparent via-white/10 to-theater-gold/50" />
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
+                <span className="text-theater-gold/40 text-[8px]">◆</span>
+                <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
               </div>
 
               {/* Profile tickets */}
@@ -214,8 +222,11 @@ export default function Home() {
                   style={{ animation: "heroRise 0.7s ease-out 0.2s both" }}
                 >
                   <p className="text-5xl mb-4">🍿</p>
-                  <p className="text-white/50 mb-6 text-sm">
-                    No tickets yet — add your household to get started
+                  <p className="text-white/60 font-semibold text-base mb-2">
+                    No profiles yet
+                  </p>
+                  <p className="text-white/35 text-sm mb-6">
+                    Add your household members to get started
                   </p>
                   <a href="/settings" className="btn-primary inline-block">
                     + Create Profile
@@ -238,14 +249,16 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Hint */}
-              <p
-                className="mt-8 text-white/30 text-xs flex items-center gap-2"
-                style={{ animation: "heroRise 0.7s ease-out 0.5s both" }}
-              >
-                <span className="inline-block animate-bounce">🎟️</span>
-                Tap a ticket to start the show
-              </p>
+              {/* Hint — smart, shows count */}
+              {profiles.length > 0 && (
+                <p
+                  className="mt-8 text-white/25 text-xs flex items-center gap-2"
+                  style={{ animation: "heroRise 0.7s ease-out 0.5s both" }}
+                >
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-theater-gold/40 animate-pulse" />
+                  {profiles.length} {profiles.length === 1 ? "member" : "members"} ready — tap a ticket
+                </p>
+              )}
             </div>
           </main>
         </>
