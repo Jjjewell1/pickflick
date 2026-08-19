@@ -95,7 +95,14 @@ export async function POST(req: Request) {
 
     const excludeSet = new Set(excludeIds);
     const filtered = movies.filter(
-      (m) => !excludeSet.has(m.Id) && !m.UserData?.Played
+      (m) =>
+        !excludeSet.has(m.Id) &&
+        !m.UserData?.Played &&
+        m.CommunityRating &&
+        m.CommunityRating >= 5.5 &&
+        m.Overview &&
+        m.Overview.length > 10 &&
+        !m.Name.toLowerCase().includes("collection")
     );
 
     if (filtered.length === 0) {
@@ -104,7 +111,7 @@ export async function POST(req: Request) {
 
     const movieData = filtered
       .sort((a, b) => (b.CommunityRating || 0) - (a.CommunityRating || 0))
-      .slice(0, 120)
+      .slice(0, 80)
       .map((m) => ({
       id: m.Id,
       name: m.Name,
@@ -117,17 +124,17 @@ export async function POST(req: Request) {
     const pickedIds = await askAIForPicks(movieData, profiles, genre);
 
     const pickedSet = new Set(pickedIds);
-    const suggestions = filtered
-      .filter((m) => pickedSet.has(m.Id))
+    const suggestions = movieData
+      .filter((m) => pickedSet.has(m.id))
       .slice(0, 6)
       .map((m) => ({
-        id: m.Id,
-        name: m.Name,
-        poster: `/api/jellyfin/image?movieId=${m.Id}`,
-        rating: m.OfficialRating,
-        genres: m.Genres,
-        overview: m.Overview,
-        communityRating: m.CommunityRating,
+        id: m.id,
+        name: m.name,
+        poster: `/api/jellyfin/image?movieId=${m.id}`,
+        rating: m.contentRating,
+        genres: m.genres,
+        overview: m.overview,
+        communityRating: m.communityRating,
       }));
 
     return NextResponse.json({ suggestions });
