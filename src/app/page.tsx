@@ -189,7 +189,7 @@ export default function Home() {
         <>
           {/* Top bar — glass pill nav */}
           <header
-            className="relative z-30 flex items-center justify-between px-5 py-4 mt-24 sm:mt-28"
+            className="relative z-30 flex items-center justify-between px-5 py-3 mt-16 sm:mt-20"
             style={{ animation: "heroRise 0.7s ease-out both" }}
           >
             <div className="flex items-center gap-2.5">
@@ -221,14 +221,14 @@ export default function Home() {
             </nav>
           </header>
 
-          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-20 pt-2">
+          <main className="relative z-30 flex-1 flex flex-col items-center px-4 pb-12 pt-2">
             <div className="w-full max-w-3xl flex flex-col items-center">
               {/* Hero marquee */}
               <Marquee />
 
               {/* NOW SHOWING divider */}
               <div
-                className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mt-12 mb-10"
+                className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mt-8 mb-6"
                 style={{ animation: "heroRise 0.7s ease-out 0.25s both" }}
               >
                 <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-theater-gold/50" />
@@ -275,7 +275,7 @@ export default function Home() {
 
               {/* Hint */}
               <p
-                className="mt-12 text-white/30 text-xs flex items-center gap-2"
+                className="mt-8 text-white/30 text-xs flex items-center gap-2"
                 style={{ animation: "heroRise 0.7s ease-out 0.9s both" }}
               >
                 <span className="inline-block animate-bounce">🎟️</span>
