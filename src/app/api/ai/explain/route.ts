@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const genreContext = genre ? `They chose the "${genre}" genre.` : "";
 
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "phi4-mini:3.8b",
       messages: [
         {
           role: "system",

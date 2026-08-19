@@ -38,4 +38,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV DATABASE_URL="file:/app/data/pickflick.db"
 ENV HOSTNAME="0.0.0.0"
+ENV OLLAMA_URL="http://192.168.1.154:11434"
 CMD ["/app/entrypoint.sh"]

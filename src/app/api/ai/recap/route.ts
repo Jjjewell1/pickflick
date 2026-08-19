@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const nomSummary = nominations.map((n) => `${n.profileName} nominated "${n.title}"`).join("\n");
 
     const response = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "phi4-mini:3.8b",
       messages: [
         {
           role: "system",

@@ -102,7 +102,7 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
             </span>
           </button>
           <p className="text-white/15 text-[10px] mt-2">
-            Powered by OpenAI — based on your family profiles
+            Powered by Ollama — based on your family profiles
           </p>
         </div>
       )}

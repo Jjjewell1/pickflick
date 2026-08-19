@@ -46,7 +46,7 @@ ${movieSummaries}
 Pick the 6 best movies for tonight. Return a JSON array of movie IDs only.`;
 
   const response = await getOpenAI().chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "phi4-mini:3.8b",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
