@@ -38,8 +38,8 @@ function MovieCard({ movie, posterUrl, nominated, onNominate, index }: MovieCard
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl">
-            🎬
+          <div className="w-full h-full flex items-center justify-center text-4xl text-white/20">
+            ◈
           </div>
         )}
 
@@ -55,7 +55,7 @@ function MovieCard({ movie, posterUrl, nominated, onNominate, index }: MovieCard
 
         {/* Nominated badge */}
         {nominated && (
-          <span className="absolute top-2 left-2 bg-theater-gold text-black text-[10px] px-2 py-0.5 rounded-md font-bold shadow-lg">
+          <span className="absolute top-2 left-2 bg-cyan text-black text-[10px] px-2 py-0.5 rounded-md font-bold shadow-lg">
             Nominated ✓
           </span>
         )}
@@ -71,7 +71,7 @@ function MovieCard({ movie, posterUrl, nominated, onNominate, index }: MovieCard
             {movie.Name}
           </h3>
           {movie.CommunityRating && (
-            <p className="text-theater-gold text-xs mt-1 drop-shadow-md">
+            <p className="text-cyan text-xs mt-1 drop-shadow-md">
               ⭐ {movie.CommunityRating.toFixed(1)}
             </p>
           )}
@@ -84,7 +84,7 @@ function MovieCard({ movie, posterUrl, nominated, onNominate, index }: MovieCard
         className={`w-full text-xs py-2.5 font-semibold transition-all ${
           nominated
             ? "bg-red-500/15 text-red-300 hover:bg-red-500/25 active:scale-[0.97]"
-            : "bg-white/5 text-white/70 hover:bg-theater-red/15 hover:text-theater-red active:scale-[0.97]"
+            : "bg-white/5 text-white/70 hover:bg-cyan/15 hover:text-cyan active:scale-[0.97]"
         }`}
       >
         {nominated ? "✕ Remove" : "+ Nominate"}
@@ -144,14 +144,14 @@ export default function MovieBrowser({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search movies..."
-            className="w-full bg-white/[0.04] backdrop-blur-lg border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-theater-red/40 focus:border-theater-red/30 transition-all"
+            className="w-full bg-white/[0.04] backdrop-blur-lg border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/40 focus:border-cyan/30 transition-all"
           />
         </div>
         <button
           onClick={shuffle}
-          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-theater-gold/10 border border-theater-gold/25 text-theater-gold text-sm font-semibold hover:bg-theater-gold/20 hover:border-theater-gold/40 active:scale-95 transition-all whitespace-nowrap"
+          className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-cyan/10 border border-cyan/25 text-cyan text-sm font-semibold hover:bg-cyan/20 hover:border-cyan/40 active:scale-95 transition-all whitespace-nowrap"
         >
-          <span className={`inline-block ${shuffling ? "animate-spin" : ""}`}>🔀</span>
+          <span className={`inline-block ${shuffling ? "animate-spin" : ""}`}>↻</span>
           Shuffle
         </button>
         <span className="text-white/30 text-sm whitespace-nowrap font-mono">
@@ -178,7 +178,7 @@ export default function MovieBrowser({
       {/* Empty state */}
       {filtered.length === 0 && (
         <div className="text-center py-16 text-white/40">
-          <p className="text-5xl mb-4">🍿</p>
+          <p className="text-5xl mb-4 opacity-30">◈</p>
           <p className="text-sm">
             No movies found{search ? " matching your search" : ""}
           </p>

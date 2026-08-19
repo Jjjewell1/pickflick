@@ -18,7 +18,7 @@ function Confetti() {
       delay: Math.random() * 1.8,
       duration: 2 + Math.random() * 2.5,
       color:
-        ["#C03078", "#F5C518", "#E03060", "#F06048", "#FFD700", "#483078"][
+        ["#00E5FF", "#00BCD4", "#B0BEC5", "#00838F", "#CFD8DC", "#00E5FF"][
           Math.floor(Math.random() * 6)
         ],
       size: 5 + Math.random() * 10,
@@ -60,7 +60,7 @@ function SparkleParticles() {
         sy: `${Math.sin(angle) * dist}px`,
         delay: 0.6 + Math.random() * 0.4,
         size: 3 + Math.random() * 4,
-        color: i % 3 === 0 ? "#F5C518" : i % 3 === 1 ? "#C03078" : "#fff",
+        color: i % 3 === 0 ? "#00E5FF" : i % 3 === 1 ? "#B0BEC5" : "#fff",
       };
     }), []);
 
@@ -93,7 +93,7 @@ function BurstRings() {
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="absolute rounded-full border-theater-gold/40"
+          className="absolute rounded-full border-cyan/30"
           style={{
             width: "120px",
             height: "120px",
@@ -129,11 +129,11 @@ export default function WinnerReveal({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] relative">
-      {/* Spotlight backdrop */}
+      {/* Spotlight backdrop — cyan */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 50% 50% at 50% 35%, rgba(245,197,24,0.12) 0%, rgba(192,48,120,0.05) 40%, transparent 70%)",
+          background: "radial-gradient(ellipse 50% 50% at 50% 35%, rgba(0,229,255,0.12) 0%, rgba(0,188,212,0.05) 40%, transparent 70%)",
           animation: "spotlightFlash 1.5s ease-out both",
         }}
       />
@@ -160,8 +160,8 @@ export default function WinnerReveal({
             className="relative mx-auto mb-8 w-52 sm:w-64 aspect-[2/3] rounded-2xl overflow-hidden"
             style={{
               animation: phase === "flash" ? "none" : "posterZoom 0.9s cubic-bezier(0.22,1,0.36,1) both",
-              boxShadow: "0 0 40px rgba(245,197,24,0.3), 0 0 80px rgba(245,197,24,0.15), 0 20px 60px rgba(0,0,0,0.6)",
-              border: "2px solid rgba(245,197,24,0.4)",
+              boxShadow: "0 0 40px rgba(0,229,255,0.3), 0 0 80px rgba(0,229,255,0.15), 0 20px 60px rgba(0,0,0,0.6)",
+              border: "2px solid rgba(0,229,255,0.4)",
             }}
           >
             <img
@@ -169,8 +169,8 @@ export default function WinnerReveal({
               alt={title}
               className="w-full h-full object-cover"
             />
-            {/* Gold vignette overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-theater-gold/10 pointer-events-none" />
+            {/* Cyan tint overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-cyan/10 pointer-events-none" />
           </div>
         )}
 
@@ -184,17 +184,17 @@ export default function WinnerReveal({
           👑
         </div>
 
-        {/* Title */}
+        {/* Title — cyan gradient */}
         <h1
           className="font-display text-5xl sm:text-7xl tracking-wider text-center leading-none mb-4 max-w-lg"
           style={{
             animation: phase === "flash" ? "none" : "titleReveal 0.7s ease-out 0.5s both",
-            background: "linear-gradient(135deg, #F5C518 0%, #fff7d6 45%, #F5C518 100%)",
+            background: "linear-gradient(135deg, #00E5FF 0%, #E0F7FA 45%, #00BCD4 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",
             textShadow: "none",
-            filter: "drop-shadow(0 0 20px rgba(245,197,24,0.4))",
+            filter: "drop-shadow(0 0 20px rgba(0,229,255,0.4))",
           }}
         >
           {title}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import PopcornBackground from "@/components/PopcornBackground";
+import TechBackground from "@/components/PopcornBackground";
 import Header from "@/components/Header";
 
 interface NominationRecord {
@@ -66,19 +66,19 @@ function NightRow({
           className="w-16 h-24 object-cover flex-shrink-0"
         />
       ) : (
-        <div className="w-16 h-24 bg-white/5 flex items-center justify-center flex-shrink-0 text-2xl">
-          🎬
+        <div className="w-16 h-24 bg-white/5 flex items-center justify-center flex-shrink-0 text-2xl text-white/20">
+          ◈
         </div>
       )}
 
       <div className="flex-1 min-w-0 px-4 py-3">
-        <h3 className="font-display text-lg tracking-wide text-white truncate">
+        <h3 className="font-display text-lg tracking-wide text-silver-light truncate">
           {displayTitle}
         </h3>
-        <p className="text-white/40 text-xs mt-0.5">
+        <p className="text-silver-dark/60 text-xs mt-0.5">
           {night.genre} &middot; {night.maxRating || "All ratings"}
         </p>
-        <time className="text-white/25 text-[10px] block mt-1">
+        <time className="text-silver-dark/40 text-[10px] block mt-1">
           {new Date(night.date).toLocaleDateString()}
         </time>
       </div>
@@ -87,7 +87,7 @@ function NightRow({
         {!night.winnerTitle && night.nominations?.length > 0 && (
           <button
             onClick={() => onFix(night)}
-            className="p-2 rounded-lg text-white/20 hover:text-theater-gold hover:bg-theater-gold/10 transition-all"
+            className="p-2 rounded-lg text-white/20 hover:text-cyan hover:bg-cyan/10 transition-all"
             title="Mark first pick as winner"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,23 +167,23 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen relative">
-      <PopcornBackground />
+      <TechBackground />
       <Header />
 
       <main className="relative z-10 max-w-2xl mx-auto px-4 py-8">
-        <h1 className="font-display text-4xl sm:text-5xl tracking-wide text-white mb-8 text-center bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent">
+        <h1 className="font-display text-4xl sm:text-5xl tracking-wide mb-8 text-center brand-gradient-text">
           MOVIE NIGHT HISTORY
         </h1>
 
         {loading ? (
           <div className="flex flex-col items-center gap-4 py-16">
             <div className="film-spinner" />
-            <p className="text-white/40 text-sm">Loading history...</p>
+            <p className="text-silver-dark/50 text-sm">Loading history...</p>
           </div>
         ) : nights.length === 0 ? (
           <div className="glass-panel p-10 text-center">
-            <p className="text-5xl mb-4">🎬</p>
-            <p className="text-white/40 text-sm">
+            <p className="text-5xl mb-4 opacity-20">◈</p>
+            <p className="text-silver-dark/50 text-sm">
               No movie nights yet. Start one from the home page!
             </p>
           </div>

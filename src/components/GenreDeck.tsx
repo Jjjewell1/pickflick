@@ -32,29 +32,29 @@ const EMOJI_MAP: Record<string, string> = {
 };
 
 const CARD_COLORS = [
-  "from-red-900/80 via-red-800/60 to-red-950/80",
-  "from-amber-900/80 via-amber-800/60 to-amber-950/80",
-  "from-rose-900/80 via-rose-800/60 to-rose-950/80",
-  "from-orange-900/80 via-orange-800/60 to-orange-950/80",
-  "from-red-950/80 via-red-900/60 to-red-800/80",
-  "from-amber-950/80 via-amber-900/60 to-amber-800/80",
+  "from-cyan-900/80 via-cyan-800/60 to-cyan-950/80",
+  "from-teal-900/80 via-teal-800/60 to-teal-950/80",
+  "from-sky-900/80 via-sky-800/60 to-sky-950/80",
+  "from-blue-900/80 via-blue-800/60 to-blue-950/80",
+  "from-cyan-950/80 via-cyan-900/60 to-cyan-800/80",
+  "from-teal-950/80 via-teal-900/60 to-teal-800/80",
 ];
 
 function CardBack() {
   return (
-    <div className="w-full h-full rounded-2xl overflow-hidden border-2 border-theater-gold/30 shadow-2xl relative bg-gradient-to-br from-[#2a0a12] via-[#1a0608] to-[#0d0304]">
-      <div className="absolute inset-2 rounded-xl border border-theater-gold/20" />
-      <div className="absolute inset-4 rounded-lg border border-theater-gold/10" />
+    <div className="w-full h-full rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl relative bg-gradient-to-br from-[#0f1219] via-[#0c0e15] to-[#0a0c12]">
+      <div className="absolute inset-2 rounded-xl border border-cyan/[0.06]" />
+      <div className="absolute inset-4 rounded-lg border border-cyan/[0.04]" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative">
-          <span className="text-4xl sm:text-5xl opacity-80">🍿</span>
-          <div className="absolute inset-0 blur-lg bg-theater-gold/20 rounded-full" />
+          <span className="text-4xl sm:text-5xl opacity-60">◈</span>
+          <div className="absolute inset-0 blur-lg bg-cyan/10 rounded-full" />
         </div>
       </div>
-      <div className="absolute top-3 left-3 w-6 h-6 rounded-full bg-theater-gold/10 border border-theater-gold/20" />
-      <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-theater-gold/10 border border-theater-gold/20" />
-      <div className="absolute bottom-3 left-3 w-6 h-6 rounded-full bg-theater-gold/10 border border-theater-gold/20" />
-      <div className="absolute bottom-3 right-3 w-6 h-6 rounded-full bg-theater-gold/10 border border-theater-gold/20" />
+      <div className="absolute top-3 left-3 w-6 h-6 rounded-full bg-cyan/[0.04] border border-cyan/[0.08]" />
+      <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-cyan/[0.04] border border-cyan/[0.08]" />
+      <div className="absolute bottom-3 left-3 w-6 h-6 rounded-full bg-cyan/[0.04] border border-cyan/[0.08]" />
+      <div className="absolute bottom-3 right-3 w-6 h-6 rounded-full bg-cyan/[0.04] border border-cyan/[0.08]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/5" />
     </div>
   );
@@ -65,7 +65,7 @@ function CardFront({ genre, colorIndex }: { genre: string; colorIndex: number })
   const colorClass = CARD_COLORS[colorIndex % CARD_COLORS.length];
 
   return (
-    <div className={`w-full h-full rounded-2xl overflow-hidden border-2 border-theater-gold/40 shadow-2xl relative bg-gradient-to-br ${colorClass}`}>
+    <div className={`w-full h-full rounded-2xl overflow-hidden border border-cyan/20 shadow-2xl relative bg-gradient-to-br ${colorClass}`}>
       <div className="absolute inset-2 rounded-xl border border-white/10" />
       <div className="h-full flex flex-col items-center justify-center p-4 text-center relative z-10">
         <span className="text-5xl sm:text-6xl mb-3 drop-shadow-lg">{emoji}</span>
@@ -73,10 +73,10 @@ function CardFront({ genre, colorIndex }: { genre: string; colorIndex: number })
           {genre}
         </span>
       </div>
-      <div className="absolute top-2.5 left-2.5 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-theater-gold font-bold text-[10px] border border-theater-gold/30">
+      <div className="absolute top-2.5 left-2.5 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-cyan font-bold text-[10px] border border-cyan/20">
         {genre[0]}
       </div>
-      <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-theater-gold font-bold text-[10px] border border-theater-gold/30 rotate-180">
+      <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-cyan font-bold text-[10px] border border-cyan/20 rotate-180">
         {genre[0]}
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/5" />
@@ -197,7 +197,7 @@ export default function GenreDeck({
               {[0, 1, 2].map((j) => (
                 <div
                   key={j}
-                  className="w-8 h-0.5 bg-theater-gold/30 rounded-full mb-2"
+                  className="w-8 h-0.5 bg-cyan/30 rounded-full mb-2"
                   style={{
                     opacity: (shuffleIndex + j) % 3 === 0 ? 0.6 : 0.1,
                     transform: `translateX(${-j * 4}px)`,
@@ -251,12 +251,12 @@ export default function GenreDeck({
             <div className="relative w-full h-full">
               <CardFront genre={dealtGenre} colorIndex={dealtColorIndex} />
               {/* Glow ring */}
-              <div className="absolute -inset-3 rounded-3xl border-2 border-theater-gold/30 animate-pulse-glow pointer-events-none" />
+              <div className="absolute -inset-3 rounded-3xl border border-cyan/20 animate-pulse-glow pointer-events-none" />
               {/* Sparkle particles */}
               {[0, 1, 2, 3, 4, 5].map((j) => (
                 <div
                   key={j}
-                  className="absolute w-1.5 h-1.5 bg-theater-gold rounded-full"
+                  className="absolute w-1.5 h-1.5 bg-cyan rounded-full"
                   style={{
                     top: `${20 + Math.sin(j * 1.2) * 30}%`,
                     left: `${20 + Math.cos(j * 1.2) * 30}%`,
@@ -280,8 +280,8 @@ export default function GenreDeck({
       {/* Status text */}
       <div className="h-8 flex items-center">
         {phase === "shuffling" && (
-          <p className="text-theater-gold/60 text-sm font-medium animate-pulse">
-            ✨ Picking your genre...
+          <p className="text-cyan/60 text-sm font-medium animate-pulse">
+            ✦ Picking your genre...
           </p>
         )}
         {phase === "dealing" && (
@@ -301,10 +301,9 @@ export default function GenreDeck({
         <button
           onClick={shuffle}
           disabled={genres.length === 0}
-          className="btn-primary relative overflow-hidden group"
+          className="btn-primary relative overflow-hidden"
         >
-          <span className="relative z-10">🔀 Shuffle & Deal</span>
-          <div className="absolute inset-0 bg-gradient-to-r from-theater-red via-red-500 to-theater-red opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <span className="relative z-10">Shuffle & Deal</span>
         </button>
       )}
 
@@ -314,14 +313,14 @@ export default function GenreDeck({
             onClick={handleReshuffle}
             className="btn-primary text-sm px-6 py-3"
           >
-            🔀 Reshuffle
+            Reshuffle
           </button>
           {canReroll && (
             <button
               onClick={handleNewGenres}
               className="btn-secondary text-sm"
             >
-              🎲 New Genres
+              New Genres
             </button>
           )}
         </div>

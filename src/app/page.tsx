@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import PopcornBackground from "@/components/PopcornBackground";
+import TechBackground from "@/components/PopcornBackground";
 import PinPad from "@/components/PinPad";
 import HowToModal from "@/components/HowToModal";
 import Marquee from "@/components/Marquee";
-import VelvetCurtain from "@/components/VelvetCurtain";
 
 interface Profile {
   id: string;
@@ -17,12 +16,12 @@ interface Profile {
 }
 
 const TIER_META: Record<string, { label: string; color: string }> = {
-  kid: { label: "KID", color: "text-emerald-300" },
-  teen: { label: "TEEN", color: "text-amber-300" },
-  adult: { label: "ADULT", color: "text-sky-300" },
+  kid: { label: "KID", color: "text-emerald-400" },
+  teen: { label: "TEEN", color: "text-amber-400" },
+  adult: { label: "ADULT", color: "text-cyan" },
 };
 
-function TicketCard({
+function AccessCard({
   profile,
   index,
   onClick,
@@ -39,38 +38,56 @@ function TicketCard({
         animation: `ticketIn 0.7s cubic-bezier(0.34,1.56,0.64,1) ${0.35 + index * 0.09}s both`,
       }}
     >
-      <button onClick={onClick} className="ticket-card group w-full">
-        <div className="ticket-inner flex items-stretch min-h-[136px]">
-          {/* Stub */}
-          <div className="relative w-12 flex flex-col items-center justify-center gap-1.5 border-r border-dashed border-theater-gold/25 flex-shrink-0">
-            <span className={`text-[10px] font-black tracking-widest ${tier.color}`}>
-              {tier.label}
-            </span>
-            <span
-              className="text-[7px] uppercase tracking-[0.3em] text-white/20 whitespace-nowrap"
-              style={{ writingMode: "vertical-rl" }}
-            >
-              Admit One
+      <button onClick={onClick} className="access-card group w-full text-left">
+        <div className="access-card-inner flex items-stretch min-h-[160px] p-0">
+          {/* Corner brackets */}
+          <span className="access-card-corner access-card-corner-tl" style={{ borderColor: "rgba(0,229,255,0.25)" }} />
+          <span className="access-card-corner access-card-corner-tr" style={{ borderColor: "rgba(0,229,255,0.25)" }} />
+          <span className="access-card-corner access-card-corner-bl" style={{ borderColor: "rgba(0,229,255,0.25)" }} />
+          <span className="access-card-corner access-card-corner-br" style={{ borderColor: "rgba(0,229,255,0.25)" }} />
+
+          {/* Left: avatar zone */}
+          <div className="relative w-24 sm:w-28 flex flex-col items-center justify-center gap-2 flex-shrink-0 border-r border-white/[0.06]">
+            {/* Glow ring behind emoji */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-16 h-16 rounded-full blur-[20px] bg-cyan/10 group-hover:bg-cyan/20 transition-all duration-500" />
+            </div>
+
+            <span className="text-4xl sm:text-5xl relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]">
+              {profile.emoji}
             </span>
           </div>
 
-          {/* Main */}
-          <div className="relative flex-1 flex flex-col items-center justify-center gap-2.5 py-5 px-2 min-w-0">
-            <span className="absolute top-2 right-2 text-[8px] font-mono text-white/20 tracking-wider">
-              Nº {String(index + 1).padStart(3, "0")}
-            </span>
+          {/* Right: info */}
+          <div className="relative flex-1 flex flex-col justify-center gap-2 py-5 px-3 sm:px-4 min-w-0">
+            {/* Tier + serial */}
+            <div className="flex items-center justify-between">
+              <span className={`text-[10px] font-black tracking-[0.2em] ${tier.color}`}>
+                {tier.label}
+              </span>
+              <span className="text-[8px] font-mono text-white/15 tracking-wider">
+                Nº {String(index + 1).padStart(3, "0")}
+              </span>
+            </div>
 
-            <span className="text-5xl group-hover:scale-125 group-hover:-rotate-6 transition-transform duration-300 drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]">
-              {profile.emoji}
-            </span>
-            <span className="font-display font-bold text-white text-sm tracking-wide group-hover:text-theater-gold transition-colors duration-300 truncate max-w-full px-1">
+            {/* Name */}
+            <span className="font-display font-bold text-silver-light text-sm sm:text-base tracking-wide group-hover:text-cyan transition-colors duration-300 truncate">
               {profile.name}
             </span>
 
+            {/* Access line */}
+            <div className="flex items-center gap-1.5">
+              <div className="h-px flex-1 bg-gradient-to-r from-cyan/20 to-transparent" />
+              <span className="text-[7px] font-mono text-cyan/30 uppercase tracking-[0.2em]">
+                Access
+              </span>
+            </div>
+
+            {/* Lock icon */}
             {profile.pin && (
-              <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center">
+              <span className="absolute bottom-3 right-3 w-5 h-5 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
                 <svg
-                  className="w-3 h-3 text-theater-gold/80"
+                  className="w-3 h-3 text-cyan/50"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -86,33 +103,24 @@ function TicketCard({
             )}
           </div>
 
-          {/* Barcode edge */}
-          <div className="flex items-center pr-2.5 sm:pr-3 flex-shrink-0">
-            <div className="ticket-barcode" />
-          </div>
-
-          {/* Punch notches on the tear line */}
-          <span className="ticket-punch ticket-punch-top" />
-          <span className="ticket-punch ticket-punch-bottom" />
-
           {/* Shine sweep */}
-          <span className="ticket-shine" />
+          <span className="access-card-shine" />
         </div>
       </button>
     </div>
   );
 }
 
-function AddTicket({ delay, onClick }: { delay: number; onClick: () => void }) {
+function AddCard({ delay, onClick }: { delay: number; onClick: () => void }) {
   return (
     <div style={{ animation: `ticketIn 0.7s cubic-bezier(0.34,1.56,0.64,1) ${delay}s both` }}>
       <button
         onClick={onClick}
-        className="group relative w-full rounded-[1.1rem] border-2 border-dashed border-white/15 hover:border-theater-gold/60 bg-white/[0.02] hover:bg-theater-gold/[0.04] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.45),0_0_30px_rgba(245,197,24,0.12)] flex flex-col items-center justify-center gap-3 min-h-[136px]"
+        className="group relative w-full rounded-xl border border-dashed border-white/[0.08] hover:border-cyan/40 bg-white/[0.02] hover:bg-cyan/[0.03] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.45),0_0_30px_rgba(0,229,255,0.08)] flex flex-col items-center justify-center gap-3 min-h-[160px]"
       >
-        <span className="w-11 h-11 rounded-full border-2 border-white/15 group-hover:border-theater-gold/70 group-hover:bg-theater-gold/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-90">
+        <span className="w-11 h-11 rounded-full border border-white/[0.08] group-hover:border-cyan/40 group-hover:bg-cyan/[0.06] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-90">
           <svg
-            className="w-5 h-5 text-white/30 group-hover:text-theater-gold transition-colors duration-300"
+            className="w-5 h-5 text-white/20 group-hover:text-cyan/70 transition-colors duration-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -120,8 +128,8 @@ function AddTicket({ delay, onClick }: { delay: number; onClick: () => void }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </span>
-        <span className="text-white/30 group-hover:text-theater-gold/90 text-[10px] font-bold uppercase tracking-[0.25em] transition-colors duration-300">
-          New Ticket
+        <span className="text-white/20 group-hover:text-cyan/70 text-[10px] font-bold uppercase tracking-[0.25em] transition-colors duration-300">
+          Add Access
         </span>
       </button>
     </div>
@@ -181,8 +189,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative flex flex-col overflow-hidden">
-      <PopcornBackground />
-      <VelvetCurtain />
+      <TechBackground />
       <HowToModal open={showHowTo} onClose={() => setShowHowTo(false)} />
 
       {!selectedProfile ? (
@@ -193,28 +200,28 @@ export default function Home() {
             style={{ animation: "heroRise 0.7s ease-out both" }}
           >
             <div className="flex items-center gap-2.5">
-              <span className="text-xl">🎟️</span>
-              <span className="font-display text-sm font-bold text-white/60 tracking-wide hidden sm:inline">
-                Box Office
+              <div className="w-2 h-2 rounded-full bg-cyan/60 shadow-[0_0_8px_rgba(0,229,255,0.5)]" />
+              <span className="font-display text-[10px] font-bold text-silver-dark/60 tracking-[0.15em] uppercase hidden sm:inline">
+                PickFlick
               </span>
             </div>
 
-            <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-lg">
+            <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-full p-1 shadow-lg">
               <button
                 onClick={() => setShowHowTo(true)}
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
+                className="px-4 py-1.5 rounded-full text-sm text-white/50 hover:text-white hover:bg-white/[0.06] transition-all"
               >
                 How To
               </button>
               <a
                 href="/history"
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
+                className="px-4 py-1.5 rounded-full text-sm text-white/50 hover:text-white hover:bg-white/[0.06] transition-all"
               >
                 History
               </a>
               <a
                 href="/settings"
-                className="px-4 py-1.5 rounded-full text-sm text-white/60 hover:text-white hover:bg-white/10 transition-all"
+                className="px-4 py-1.5 rounded-full text-sm text-white/50 hover:text-white hover:bg-white/[0.06] transition-all"
               >
                 Settings
               </a>
@@ -226,31 +233,31 @@ export default function Home() {
               {/* Hero marquee */}
               <Marquee />
 
-              {/* NOW SHOWING divider */}
+              {/* SELECT ACCESS divider */}
               <div
                 className="flex items-center gap-3 sm:gap-4 w-full max-w-lg mt-12 mb-10"
                 style={{ animation: "heroRise 0.7s ease-out 0.25s both" }}
               >
-                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-theater-gold/50" />
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan/15 to-transparent" />
                 <span className="flex items-center gap-2.5">
-                  <span className="text-theater-gold/50 text-xs">✦</span>
+                  <span className="text-cyan/30 text-xs">◆</span>
                   <span className="shimmer-text text-xs sm:text-sm font-bold uppercase tracking-[0.35em]">
-                    Now Showing
+                    Select Access
                   </span>
-                  <span className="text-theater-gold/50 text-xs">✦</span>
+                  <span className="text-cyan/30 text-xs">◆</span>
                 </span>
-                <span className="h-px flex-1 bg-gradient-to-l from-transparent via-white/10 to-theater-gold/50" />
+                <span className="h-px flex-1 bg-gradient-to-l from-transparent via-cyan/15 to-transparent" />
               </div>
 
-              {/* Profile tickets */}
+              {/* Profile access cards */}
               {profiles.length === 0 ? (
                 <div
                   className="glass-panel p-10 text-center max-w-sm"
                   style={{ animation: "heroRise 0.7s ease-out 0.4s both" }}
                 >
-                  <p className="text-5xl mb-4">🍿</p>
-                  <p className="text-white/50 mb-6 text-sm">
-                    No tickets yet — add your household to get started
+                  <p className="text-5xl mb-4">◈</p>
+                  <p className="text-silver-dark/60 mb-6 text-sm">
+                    No profiles yet — add your household to get started
                   </p>
                   <a href="/settings" className="btn-primary inline-block">
                     + Create Profile
@@ -259,14 +266,14 @@ export default function Home() {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 w-full max-w-4xl">
                   {profiles.map((p, i) => (
-                    <TicketCard
+                    <AccessCard
                       key={p.id}
                       profile={p}
                       index={i}
                       onClick={() => handleProfileClick(p)}
                     />
                   ))}
-                  <AddTicket
+                  <AddCard
                     delay={0.35 + profiles.length * 0.09}
                     onClick={() => router.push("/settings")}
                   />
@@ -275,11 +282,11 @@ export default function Home() {
 
               {/* Hint */}
               <p
-                className="mt-12 text-white/30 text-xs flex items-center gap-2"
+                className="mt-12 text-silver-dark/30 text-xs flex items-center gap-2"
                 style={{ animation: "heroRise 0.7s ease-out 0.9s both" }}
               >
-                <span className="inline-block animate-bounce">🎟️</span>
-                Tap a ticket to start the show
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan/30 animate-pulse" />
+                Select a profile to begin
               </p>
             </div>
           </main>

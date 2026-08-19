@@ -74,7 +74,7 @@ export default function PinPad({
       </button>
 
       <div className="flex flex-col items-center gap-3">
-        <div className="w-24 h-24 rounded-full bg-theater-red/20 border-2 border-theater-red/40 flex items-center justify-center text-5xl shadow-lg shadow-theater-red/10">
+        <div className="w-24 h-24 rounded-full bg-cyan/20 border-2 border-cyan/40 flex items-center justify-center text-5xl shadow-lg shadow-cyan/10">
           {profileEmoji}
         </div>
         <h2 className="text-xl font-semibold text-white">{profileName}</h2>
@@ -87,7 +87,7 @@ export default function PinPad({
             key={i}
             className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold transition-all duration-200 ${
               i === activeIndex
-                ? "bg-white/15 border-2 border-theater-red shadow-lg shadow-theater-red/20"
+                ? "bg-white/15 border-2 border-cyan shadow-lg shadow-cyan/20"
                 : d
                   ? "bg-white/10 border-2 border-white/20"
                   : "bg-white/5 border-2 border-white/10"

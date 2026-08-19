@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import PopcornBackground from "@/components/PopcornBackground";
+import TechBackground from "@/components/PopcornBackground";
 import Header from "@/components/Header";
 import GenreDeck from "@/components/GenreDeck";
 import MovieBrowser from "@/components/MovieBrowser";
@@ -102,6 +102,8 @@ export default function NightPage() {
   const [error, setError] = useState("");
   const [showHowTo, setShowHowTo] = useState(false);
   const [showTransition, setShowTransition] = useState(false);
+  const [stealing, setStealing] = useState(false);
+  const [player1Picks, setPlayer1Picks] = useState<NominationEntry[]>([]);
 
   useEffect(() => {
     fetch("/api/profiles")
@@ -209,6 +211,8 @@ export default function NightPage() {
     const profile = selectedProfiles.find((p) => p.id === currentNominator);
     if (!profile) return;
 
+    const maxPicks = selectedProfiles.length === 2 ? 4 : 2;
+
     setNominations((prev) => {
       const next = new Map(prev);
       if (next.has(movie.Id)) {
@@ -217,7 +221,7 @@ export default function NightPage() {
         const currentCount = Array.from(next.values()).filter(
           (n) => n.profileId === currentNominator
         ).length;
-        if (currentCount < 2) {
+        if (currentCount < maxPicks) {
           next.set(movie.Id, {
             movieId: movie.Id,
             title: movie.Name,
@@ -234,6 +238,25 @@ export default function NightPage() {
 
   const finishNominating = () => {
     const nextIndex = nominatorIndex + 1;
+
+    // 2-player cross-pick: after both pick 4, enter stealing phase
+    if (selectedProfiles.length === 2 && nextIndex >= selectedProfiles.length && !stealing) {
+      setPlayer1Picks(Array.from(nominations.values()).filter(
+        (n) => n.profileId === selectedProfiles[0].id
+      ));
+      setStealing(true);
+      setNominatorIndex(0);
+      setCurrentNominator(selectedProfiles[1].id); // Player 2 steals first
+      setShowTransition(true);
+      return;
+    }
+
+    // Stealing complete — both players have stolen, go to final showdown
+    if (stealing && nextIndex >= selectedProfiles.length) {
+      finishStealing();
+      return;
+    }
+
     if (nextIndex < selectedProfiles.length) {
       setShowTransition(true);
     } else {
@@ -270,8 +293,28 @@ export default function NightPage() {
 
   const handleTransitionReady = () => {
     setShowTransition(false);
-    setNominatorIndex((prev) => prev + 1);
-    setCurrentNominator(selectedProfiles[nominatorIndex + 1].id);
+    if (stealing) {
+      // During stealing: player 2 steals first, then player 1
+      setNominatorIndex(1);
+      setCurrentNominator(selectedProfiles[0].id);
+    } else {
+      setNominatorIndex((prev) => prev + 1);
+      setCurrentNominator(selectedProfiles[nominatorIndex + 1].id);
+    }
+  };
+
+  const finishStealing = () => {
+    const stolen = Array.from(nominations.values()).slice(-2);
+    if (stolen.length < 2) return;
+
+    setRoundMovies(stolen);
+    setMatchIndex(0);
+    setRoundNumber(1);
+    setMatchVotes(new Map());
+    setResolvedWinners([]);
+    setRoundSplash("The Final Showdown");
+    setTimeout(() => setRoundSplash(null), 1500);
+    setStep("vote");
   };
 
   const handleVote = (movieId: string, profileId: string) => {
@@ -361,7 +404,7 @@ export default function NightPage() {
 
   return (
     <div className="min-h-screen relative">
-      <PopcornBackground />
+      <TechBackground />
       <Header onHowTo={() => setShowHowTo(true)} />
       <HowToModal open={showHowTo} onClose={() => setShowHowTo(false)} />
 
@@ -384,7 +427,7 @@ export default function NightPage() {
                   </div>
                   {meta.num < 5 && (
                     <div className={`step-connector ${
-                      isPast ? "bg-theater-gold/40" : "bg-white/[0.08]"
+                      isPast ? "bg-cyan/40" : "bg-white/[0.08]"
                     }`} />
                   )}
                 </div>
@@ -407,7 +450,7 @@ export default function NightPage() {
 
         {step === "select" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 brand-gradient-text drop-shadow-lg">
               WHO&apos;S WATCHING?
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
@@ -442,7 +485,7 @@ export default function NightPage() {
                         onClick={() => toggleProfile(p.id)}
                         className={`glass-panel p-4 flex flex-col items-center gap-2 transition-all duration-200 ${
                           isSelected
-                            ? "ring-2 ring-theater-red bg-theater-red/10 scale-[1.05]"
+                            ? "ring-2 ring-cyan bg-cyan/10 scale-[1.05]"
                             : "hover:bg-white/5 hover:scale-[1.02]"
                         }`}
                         style={{
@@ -486,7 +529,7 @@ export default function NightPage() {
 
         {step === "genre" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 brand-gradient-text drop-shadow-lg">
               PICK A GENRE
             </h2>
             <p className="text-white/40 text-center mb-8 text-sm">
@@ -513,85 +556,133 @@ export default function NightPage() {
 
         {step === "nominate" && (
           <div className="animate-fade-in-up">
-            <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
-              NOMINATE MOVIES
-            </h2>
-            <p className="text-white/40 text-center mb-2 text-sm">
-              Genre: <span className="text-theater-gold">{genre}</span>
-            </p>
-
-            {currentNomProfile && (
-              <div className="text-center mb-6">
-                <p className="text-white/50 text-sm mb-2">
-                  {currentNomProfile.emoji} {currentNomProfile.name}&apos;s turn
-                </p>
-                <p className="text-white/30 text-xs">
-                  Pick 1–2 movies, then tap Done
-                </p>
-              </div>
-            )}
-
-            {loading ? (
-              <FilmLoader text="Loading movies..." />
-            ) : (
+            {stealing ? (
               <>
-                <MovieBrowser
-                  movies={movies}
-                  onNominate={handleNominate}
-                  nominations={nominations}
-                  maxNominations={2}
-                  currentNominations={Array.from(nominations.values()).filter(
-                    (n) => n.profileId === currentNominator
-                  ).length}
-                />
+                <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 brand-gradient-text drop-shadow-lg">
+                  STEAL A PICK
+                </h2>
+                <p className="text-white/40 text-center mb-2 text-sm">
+                  Genre: <span className="text-cyan">{genre}</span>
+                </p>
 
-                {nominations.size > 0 && (
-                  <div className="mt-6">
-                    <h3 className="font-display text-xl tracking-wide text-white mb-3">
-                      NOMINATED ({nominations.size})
-                    </h3>
-                    <div className="space-y-2">
-                      {Array.from(nominations.entries()).map(([movieId, nom], i) => (
-                        <div
-                          key={movieId}
-                          className="glass-panel p-3 flex items-center gap-3"
-                          style={{
-                            animation: `staggerFadeIn 0.4s cubic-bezier(0.22,1,0.36,1) ${0.05 * i}s both`,
-                          }}
-                        >
-                          <img
-                            src={`/api/jellyfin/image?movieId=${movieId}`}
-                            alt={nom.title}
-                            className="w-12 h-16 rounded-lg object-cover bg-black/30 flex-shrink-0"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = "none";
-                            }}
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-white text-sm font-medium truncate">{nom.title}</p>
-                            <p className="text-white/40 text-xs">{nom.profileEmoji} {nom.profileName}</p>
-                          </div>
-                          {nom.profileId === currentNominator && (
-                            <button
-                              onClick={() => handleNominate({ Id: movieId, Name: nom.title } as JellyfinMovie)}
-                              className="text-red-400/60 hover:text-red-400 text-xs px-2 py-1 rounded hover:bg-red-500/10 transition-colors flex-shrink-0"
-                            >
-                              ✕ Remove
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                {currentNomProfile && (
+                  <div className="text-center mb-6">
+                    <p className="text-white/50 text-sm mb-1">
+                      {currentNomProfile.emoji} {currentNomProfile.name}&apos;s turn
+                    </p>
+                    <p className="text-cyan/70 text-xs">
+                      Pick 1 movie from {selectedProfiles.find((p) => p.id !== currentNominator)?.name}&apos;s list
+                    </p>
                   </div>
                 )}
 
-                <div className="text-center mt-6">
-                  <button onClick={finishNominating} className="btn-primary">
-                    {nominatorIndex < selectedProfiles.length - 1
-                      ? "Done — Next Person →"
-                      : "Done — Start Voting →"}
-                  </button>
-                </div>
+                {loading ? (
+                  <FilmLoader text="Loading movies..." />
+                ) : (
+                  <>
+                    <MovieBrowser
+                      movies={movies.filter((m) =>
+                        player1Picks.some((p) => p.movieId === m.Id)
+                      )}
+                      onNominate={handleNominate}
+                      nominations={nominations}
+                      maxNominations={1}
+                      currentNominations={0}
+                    />
+
+                    <div className="text-center mt-6">
+                      <button onClick={finishNominating} className="btn-primary">
+                        Done — Submit Steal →
+                      </button>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <h2 className="font-display text-4xl sm:text-5xl tracking-wide text-center mb-2 brand-gradient-text drop-shadow-lg">
+                  NOMINATE MOVIES
+                </h2>
+                <p className="text-white/40 text-center mb-2 text-sm">
+                  Genre: <span className="text-cyan">{genre}</span>
+                </p>
+
+                {currentNomProfile && (
+                  <div className="text-center mb-6">
+                    <p className="text-white/50 text-sm mb-2">
+                      {currentNomProfile.emoji} {currentNomProfile.name}&apos;s turn
+                    </p>
+                    <p className="text-white/30 text-xs">
+                      {selectedProfiles.length === 2
+                        ? "Pick up to 4 movies, then tap Done"
+                        : "Pick 1–2 movies, then tap Done"}
+                    </p>
+                  </div>
+                )}
+
+                {loading ? (
+                  <FilmLoader text="Loading movies..." />
+                ) : (
+                  <>
+                    <MovieBrowser
+                      movies={movies}
+                      onNominate={handleNominate}
+                      nominations={nominations}
+                      maxNominations={selectedProfiles.length === 2 ? 4 : 2}
+                      currentNominations={Array.from(nominations.values()).filter(
+                        (n) => n.profileId === currentNominator
+                      ).length}
+                    />
+
+                    {nominations.size > 0 && (
+                      <div className="mt-6">
+                        <h3 className="font-display text-xl tracking-wide text-white mb-3">
+                          NOMINATED ({nominations.size})
+                        </h3>
+                        <div className="space-y-2">
+                          {Array.from(nominations.entries()).map(([movieId, nom], i) => (
+                            <div
+                              key={movieId}
+                              className="glass-panel p-3 flex items-center gap-3"
+                              style={{
+                                animation: `staggerFadeIn 0.4s cubic-bezier(0.22,1,0.36,1) ${0.05 * i}s both`,
+                              }}
+                            >
+                              <img
+                                src={`/api/jellyfin/image?movieId=${movieId}`}
+                                alt={nom.title}
+                                className="w-12 h-16 rounded-lg object-cover bg-black/30 flex-shrink-0"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = "none";
+                                }}
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-white text-sm font-medium truncate">{nom.title}</p>
+                                <p className="text-white/40 text-xs">{nom.profileEmoji} {nom.profileName}</p>
+                              </div>
+                              {nom.profileId === currentNominator && (
+                                <button
+                                  onClick={() => handleNominate({ Id: movieId, Name: nom.title } as JellyfinMovie)}
+                                  className="text-red-400/60 hover:text-red-400 text-xs px-2 py-1 rounded hover:bg-red-500/10 transition-colors flex-shrink-0"
+                                >
+                                  ✕ Remove
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="text-center mt-6">
+                      <button onClick={finishNominating} className="btn-primary">
+                        {nominatorIndex < selectedProfiles.length - 1
+                          ? "Done — Next Person →"
+                          : "Done — Start Voting →"}
+                      </button>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -628,13 +719,13 @@ export default function NightPage() {
           <div className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
             <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
             <div className="relative text-center" style={{ animation: "popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}>
-              <p className="text-theater-gold/60 text-xs uppercase tracking-[0.35em] mb-3">
+              <p className="text-cyan/60 text-xs uppercase tracking-[0.35em] mb-3">
                 Next up
               </p>
-              <h2 className="font-display text-5xl sm:text-7xl tracking-wider bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-2xl">
+              <h2 className="font-display text-5xl sm:text-7xl tracking-wider brand-gradient-text drop-shadow-2xl">
                 {roundSplash}
               </h2>
-              <p className="text-5xl mt-4" style={{ animation: "bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both" }}>🍿</p>
+              <p className="text-5xl mt-4" style={{ animation: "bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both" }}>✦</p>
             </div>
           </div>
         )}
@@ -667,10 +758,20 @@ export default function NightPage() {
 
       {showTransition && currentNomProfile && (
         <NominatorTransition
-          currentProfile={selectedProfiles[nominatorIndex + 1]}
+          currentProfile={
+            stealing && nominatorIndex === 0
+              ? selectedProfiles[1]  // Player 2 steals first
+              : stealing
+                ? selectedProfiles[0]  // Player 1 steals second
+                : selectedProfiles[nominatorIndex + 1]
+          }
           previousProfile={currentNomProfile}
-          remainingProfiles={selectedProfiles.slice(nominatorIndex + 1)}
-          isLast={nominatorIndex + 1 >= selectedProfiles.length - 1}
+          remainingProfiles={
+            stealing
+              ? [selectedProfiles[0]] // After player 2, player 1 is left
+              : selectedProfiles.slice(nominatorIndex + 1)
+          }
+          isLast={stealing ? nominatorIndex === 0 : nominatorIndex + 1 >= selectedProfiles.length - 1}
           onReady={handleTransitionReady}
         />
       )}

@@ -17,13 +17,13 @@ interface NominatorTransitionProps {
   onReady: () => void;
 }
 
-function PopcornPiece({ delay, startX, startY }: { delay: number; startX: number; startY: number }) {
+function ParticleBurst({ delay, startX, startY }: { delay: number; startX: number; startY: number }) {
   const angle = Math.random() * Math.PI * 2;
   const dist = 80 + Math.random() * 160;
   const endX = startX + Math.cos(angle) * dist;
   const endY = startY + Math.sin(angle) * dist - 60;
   const rotation = Math.random() * 720 - 360;
-  const size = 12 + Math.random() * 10;
+  const size = 4 + Math.random() * 6;
 
   return (
     <div
@@ -37,9 +37,15 @@ function PopcornPiece({ delay, startX, startY }: { delay: number; startX: number
         ["--rot" as string]: `${rotation}deg`,
       }}
     >
-      <span style={{ fontSize: `${size}px` }}>
-        {Math.random() > 0.4 ? "🍿" : Math.random() > 0.5 ? "✨" : "⭐"}
-      </span>
+      <div
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          border: "1px solid rgba(0,229,255,0.4)",
+          borderRadius: Math.random() > 0.5 ? "50%" : "1px",
+          transform: `rotate(${rotation}deg)`,
+        }}
+      />
     </div>
   );
 }
@@ -63,7 +69,7 @@ export default function NominatorTransition({
     setTimeout(onReady, 450);
   };
 
-  const popcorns = Array.from({ length: 14 }).map((_, i) => ({
+  const particles = Array.from({ length: 14 }).map((_, i) => ({
     id: i,
     delay: Math.random() * 0.3,
     startX: 45 + Math.random() * 10,
@@ -77,20 +83,20 @@ export default function NominatorTransition({
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-[#060810] transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-[#0A0A0F] transition-opacity duration-500 ${
           phase === "exit" ? "opacity-0" : "opacity-100"
         }`}
       />
 
-      {/* Ambient glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-theater-red/5 blur-[150px]" />
-      <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-theater-gold/5 blur-[120px]" />
+      {/* Ambient glow — cyan */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-cyan/5 blur-[150px]" />
+      <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-cyan/[0.03] blur-[120px]" />
 
-      {/* Burst rings */}
+      {/* Burst rings — cyan */}
       {phase !== "enter" && [0, 1, 2].map((i) => (
         <div
           key={i}
-          className="absolute rounded-full border border-theater-gold/10"
+          className="absolute rounded-full border border-cyan/10"
           style={{
             width: `${180 + i * 100}px`,
             height: `${180 + i * 100}px`,
@@ -103,9 +109,9 @@ export default function NominatorTransition({
         />
       ))}
 
-      {/* Popcorn explosion */}
-      {phase === "hold" && popcorns.map((p) => (
-        <PopcornPiece key={p.id} delay={p.delay} startX={p.startX} startY={p.startY} />
+      {/* Geometric particle explosion */}
+      {phase === "hold" && particles.map((p) => (
+        <ParticleBurst key={p.id} delay={p.delay} startX={p.startX} startY={p.startY} />
       ))}
 
       {/* Main content */}
@@ -134,8 +140,8 @@ export default function NominatorTransition({
           </div>
         )}
 
-        {/* Arrow down */}
-        <div className="mb-4 text-theater-gold/30 text-2xl animate-bounce">▼</div>
+        {/* Arrow down — cyan */}
+        <div className="mb-4 text-cyan/30 text-2xl animate-bounce">▼</div>
 
         {/* Current picker — big emoji */}
         <div className="relative mb-4">
@@ -147,7 +153,7 @@ export default function NominatorTransition({
           >
             {currentProfile.emoji}
           </div>
-          <div className="absolute inset-0 -m-10 blur-3xl bg-theater-gold/15 rounded-full -z-10" />
+          <div className="absolute inset-0 -m-10 blur-3xl bg-cyan/15 rounded-full -z-10" />
         </div>
 
         {/* Current picker name */}
@@ -156,7 +162,7 @@ export default function NominatorTransition({
             {isLast ? "Last picker" : "Up next"}
           </p>
           <h2
-            className="font-display text-4xl sm:text-5xl font-bold text-white"
+            className="font-display text-4xl sm:text-5xl font-bold text-cyan"
             style={{ animation: "fadeInUp 0.5s ease-out 0.4s both" }}
           >
             {currentProfile.name}
@@ -176,13 +182,13 @@ export default function NominatorTransition({
               >
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-2xl sm:text-3xl border-2 transition-all ${
                   p.id === currentProfile.id
-                    ? "border-theater-gold bg-theater-gold/10 shadow-lg shadow-theater-gold/20 scale-110"
+                    ? "border-cyan bg-cyan/10 shadow-lg shadow-cyan/20 scale-110"
                     : "border-white/10 bg-white/5"
                 }`}>
                   {p.emoji}
                 </div>
                 <span className={`text-[10px] font-medium ${
-                  p.id === currentProfile.id ? "text-theater-gold" : "text-white/30"
+                  p.id === currentProfile.id ? "text-cyan" : "text-white/30"
                 }`}>
                   {p.name}
                 </span>
@@ -191,9 +197,9 @@ export default function NominatorTransition({
           </div>
         )}
 
-        {/* Tap prompt */}
+        {/* Tap prompt — cyan */}
         <p
-          className="text-theater-gold/50 text-sm mt-8 animate-pulse"
+          className="text-cyan/50 text-sm mt-8 animate-pulse"
           style={{ animation: "fadeInUp 0.5s ease-out 0.8s both" }}
         >
           Tap anywhere to start
@@ -202,4 +208,3 @@ export default function NominatorTransition({
     </div>
   );
 }
-

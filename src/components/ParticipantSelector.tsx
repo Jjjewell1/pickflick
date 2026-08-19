@@ -45,7 +45,7 @@ export default function ParticipantSelector({
             className={`glass-panel p-4 flex flex-col items-center gap-2 transition-all duration-200 cursor-pointer
               ${
                 isSelected
-                  ? "ring-2 ring-theater-red bg-theater-red/10 scale-[1.05]"
+                  ? "ring-2 ring-cyan bg-cyan/10 scale-[1.05]"
                   : "hover:bg-white/5 hover:scale-[1.02]"
               }`}
           >

@@ -11,38 +11,35 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        theater: {
-          red: "#E03060",
-          "red-dark": "#B82850",
-          gold: "#F5C518",
-          "gold-dark": "#D4A810",
-          warm: "#1A0A0A",
-          navy: "#183060",
-          indigo: "#483078",
-          magenta: "#C03078",
-          orange: "#F06048",
+        cyan: {
+          DEFAULT: "#00E5FF",
+          dim: "#00BCD4",
+          glow: "#00E5FF",
+          dark: "#00838F",
         },
+        silver: {
+          DEFAULT: "#B0BEC5",
+          light: "#CFD8DC",
+          dark: "#78909C",
+        },
+        obsidian: "#0A0A0F",
         glass: {
-          light: "rgba(255, 255, 255, 0.08)",
-          medium: "rgba(255, 255, 255, 0.12)",
-          heavy: "rgba(255, 255, 255, 0.18)",
-          border: "rgba(255, 255, 255, 0.15)",
+          light: "rgba(255, 255, 255, 0.06)",
+          medium: "rgba(255, 255, 255, 0.10)",
+          heavy: "rgba(255, 255, 255, 0.16)",
+          border: "rgba(0, 229, 255, 0.18)",
         },
       },
       fontFamily: {
         display: [
-          '"Bebas Neue"',
-          "Georgia",
-          "Cambria",
-          "serif",
+          "Orbitron",
+          "Consolas",
+          "monospace",
         ],
         body: [
           "Inter",
           "system-ui",
           "-apple-system",
-          "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
           "sans-serif",
         ],
       },
@@ -61,9 +58,6 @@ const config: Config = {
         "card-wobble": "cardWobble 0.5s ease-in-out",
         "deal-slide": "dealSlide 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "stack-settle": "stackSettle 0.3s ease-out",
-        "bulb-blink": "bulbBlink 1s ease-in-out infinite",
-        "spotlight-sway": "spotlightSway 8s ease-in-out infinite",
-        "curtain-glow": "curtainGlow 3s ease-in-out infinite",
       },
       keyframes: {
         floatKernel: {
@@ -71,8 +65,8 @@ const config: Config = {
           "50%": { transform: "translateY(-20px) rotate(15deg)", opacity: "0.6" },
         },
         pulseGlow: {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(196, 30, 58, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(196, 30, 58, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(0, 229, 255, 0.3)" },
+          "50%": { boxShadow: "0 0 40px rgba(0, 229, 255, 0.6)" },
         },
         scaleIn: {
           "0%": { transform: "scale(0.5)", opacity: "0" },
@@ -112,33 +106,6 @@ const config: Config = {
         stackSettle: {
           "0%": { transform: "translateY(-4px)" },
           "100%": { transform: "translateY(0)" },
-        },
-        pingRing: {
-          "0%": { transform: "scale(0.5)", opacity: "0.6" },
-          "100%": { transform: "scale(2)", opacity: "0" },
-        },
-        popcornBurst: {
-          "0%": { transform: "translate(0, 0) rotate(0deg) scale(0)", opacity: "1" },
-          "50%": { opacity: "1" },
-          "100%": { transform: "translate(calc(var(--endX) - 50%), var(--endY)) rotate(var(--rot)) scale(1)", opacity: "0" },
-        },
-        bounceIn: {
-          "0%": { transform: "scale(0) rotate(-15deg)", opacity: "0" },
-          "60%": { transform: "scale(1.15) rotate(3deg)", opacity: "1" },
-          "80%": { transform: "scale(0.95) rotate(-1deg)" },
-          "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
-        },
-        bulbBlink: {
-          "0%, 100%": { opacity: "0.2", boxShadow: "0 0 0px rgba(245, 197, 24, 0)" },
-          "50%": { opacity: "1", boxShadow: "0 0 8px rgba(245, 197, 24, 0.9), 0 0 16px rgba(245, 197, 24, 0.5)" },
-        },
-        spotlightSway: {
-          "0%, 100%": { transform: "rotate(-12deg)", opacity: "0.35" },
-          "50%": { transform: "rotate(12deg)", opacity: "0.6" },
-        },
-        curtainGlow: {
-          "0%, 100%": { opacity: "0.6" },
-          "50%": { opacity: "1" },
         },
       },
       backdropBlur: {

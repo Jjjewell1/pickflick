@@ -90,10 +90,10 @@ export default function KnockoutScreen({
     <div className="space-y-5" style={{ animation: "heroRise 0.6s ease-out both" }}>
       {/* Round header */}
       <div className="text-center">
-        <p className="text-theater-gold/70 text-xs uppercase tracking-[0.3em] font-bold mb-1">
+        <p className="text-cyan/70 text-xs uppercase tracking-[0.3em] font-bold mb-1">
           {roundLabel}
         </p>
-        <h2 className="font-display text-4xl sm:text-5xl tracking-wide bg-gradient-to-r from-theater-gold via-yellow-100 to-theater-gold bg-clip-text text-transparent drop-shadow-lg">
+        <h2 className="font-display text-4xl sm:text-5xl tracking-wide brand-gradient-text drop-shadow-lg">
           {isFinal ? "THE FINAL SHOWDOWN" : "HEAD TO HEAD"}
         </h2>
         <p className="text-white/30 text-xs mt-1">
@@ -112,7 +112,7 @@ export default function KnockoutScreen({
               onClick={() => setVoterId(p.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                 voterId === p.id
-                  ? "bg-theater-red text-white ring-2 ring-theater-red/50 scale-105 shadow-lg shadow-theater-red/30"
+                  ? "bg-cyan text-[#0A0A0F] ring-2 ring-cyan/50 scale-105 shadow-lg shadow-cyan/30"
                   : voted
                     ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
                     : "bg-white/5 text-white/70 hover:bg-white/10 border border-white/10"
@@ -130,7 +130,7 @@ export default function KnockoutScreen({
       <div
         className="relative grid grid-cols-2 gap-3 sm:gap-5 items-stretch p-3 sm:p-4 rounded-3xl"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(192,48,120,0.06) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at center, rgba(0,229,255,0.04) 0%, transparent 70%)",
           animation: "arenaGlow 4s ease-in-out infinite",
         }}
       >
@@ -139,12 +139,12 @@ export default function KnockoutScreen({
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
             <div
               className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-black text-lg sm:text-xl italic
-                bg-gradient-to-br from-theater-red via-red-500 to-theater-red-dark
-                border-2 border-theater-gold/50
+                bg-gradient-to-br from-cyan to-cyan-dark
+                border-2 border-cyan/50
                 ${resolving ? "animate-pulse scale-110" : ""}`}
               style={!resolving ? { animation: "vsPulse 2.5s ease-in-out infinite" } : undefined}
             >
-              <span className="text-white drop-shadow-md">VS</span>
+              <span className="text-[#0A0A0F] drop-shadow-md font-display">VS</span>
             </div>
           </div>
         )}
@@ -172,9 +172,9 @@ export default function KnockoutScreen({
             onPick={() => voterId && !resolving && onVote(movieB.movieId, voterId)}
           />
         ) : (
-          <div className="rounded-3xl border-2 border-dashed border-theater-gold/20 bg-theater-gold/[0.03] flex flex-col items-center justify-center p-6">
-            <span className="text-5xl mb-3 opacity-60">🎟️</span>
-            <p className="text-theater-gold font-display text-xl tracking-wide opacity-70">BYE</p>
+          <div className="rounded-3xl border border-dashed border-white/[0.08] bg-white/[0.02] flex flex-col items-center justify-center p-6">
+            <span className="text-5xl mb-3 opacity-30">◇</span>
+            <p className="text-cyan/60 font-display text-xl tracking-wide opacity-70">BYE</p>
             <p className="text-white/30 text-xs text-center mt-1">
               Odd number — advances automatically
             </p>
@@ -196,7 +196,7 @@ export default function KnockoutScreen({
             </p>
             <div className="flex items-center gap-2">
               <div className="loading-bar" />
-              <span className="text-theater-gold font-bold text-sm font-mono">
+              <span className="text-cyan font-bold text-sm font-mono">
                 {totalVotes}/{participants.length}
               </span>
             </div>
@@ -204,12 +204,12 @@ export default function KnockoutScreen({
         )}
         {everyoneVoted && !resolving && (
           <button onClick={handleResolve} className="btn-primary" style={{ animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both" }}>
-            {isFinal ? "Crown the Winner 🏆" : "Advance Winner →"}
+            {isFinal ? "Crown the Winner" : "Advance Winner →"}
           </button>
         )}
         {resolving && (
-          <p className="text-theater-gold text-sm font-bold animate-pulse">
-            {countA === countB && movieB ? "🎲 Coin flip decides..." : "✨ Winner!"}
+          <p className="text-cyan text-sm font-bold animate-pulse">
+            {countA === countB && movieB ? "🎲 Coin flip decides..." : "✦ Winner!"}
           </p>
         )}
       </div>
@@ -250,7 +250,7 @@ function FighterCard({
     >
       {/* Poster */}
       <div className={`relative aspect-[2/3] rounded-3xl overflow-hidden border-2 transition-colors duration-300
-        ${crowned ? "border-theater-gold" : hasVoted ? "border-theater-red" : "border-white/10"}`}>
+        ${crowned ? "border-cyan" : hasVoted ? "border-cyan/60" : "border-white/10"}`}>
 
         <img
           src={`/api/jellyfin/image?movieId=${movie.movieId}`}
@@ -277,8 +277,8 @@ function FighterCard({
 
         {/* Voted check */}
         {hasVoted && !crowned && (
-          <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-theater-red flex items-center justify-center shadow-lg" style={{ animation: "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" }}>
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-cyan flex items-center justify-center shadow-lg" style={{ animation: "popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both" }}>
+            <svg className="w-4 h-4 text-[#0A0A0F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -315,7 +315,7 @@ function FighterCard({
         {/* Hover glow overlay */}
         {!dimmed && !crowned && (
           <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl">
-            <div className="absolute inset-0 bg-gradient-to-t from-theater-red/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-cyan/10 via-transparent to-transparent" />
           </div>
         )}
       </div>
