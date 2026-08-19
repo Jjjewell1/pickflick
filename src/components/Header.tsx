@@ -16,15 +16,15 @@ export default function Header({ onHowTo }: HeaderProps) {
         <img
           src="/logo.png"
           alt="PickFlick"
-          className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(0,229,255,0.3)] group-hover:drop-shadow-[0_0_14px_rgba(0,229,255,0.5)] transition-all"
+          className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_8px_rgba(192,48,120,0.3)] group-hover:drop-shadow-[0_0_14px_rgba(192,48,120,0.5)] transition-all"
         />
       </Link>
 
-      <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-full p-1 shadow-lg">
+      <nav className="flex items-center gap-1 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-full p-1 shadow-lg">
         {onHowTo && (
           <button
             onClick={onHowTo}
-            className="px-4 py-1.5 rounded-full text-sm font-medium text-white/50 hover:text-white hover:bg-white/[0.06] transition-all"
+            className="px-4 py-1.5 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-all"
           >
             How To
           </button>
@@ -33,8 +33,8 @@ export default function Header({ onHowTo }: HeaderProps) {
           href="/"
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/"
-              ? "bg-cyan/15 text-cyan"
-              : "text-white/50 hover:text-white hover:bg-white/[0.06]"
+              ? "bg-theater-red/20 text-theater-red"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           Home
@@ -43,8 +43,8 @@ export default function Header({ onHowTo }: HeaderProps) {
           href="/history"
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/history"
-              ? "bg-cyan/15 text-cyan"
-              : "text-white/50 hover:text-white hover:bg-white/[0.06]"
+              ? "bg-theater-red/20 text-theater-red"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           History
@@ -53,8 +53,8 @@ export default function Header({ onHowTo }: HeaderProps) {
           href="/settings"
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
             pathname === "/settings"
-              ? "bg-cyan/15 text-cyan"
-              : "text-white/50 hover:text-white hover:bg-white/[0.06]"
+              ? "bg-theater-red/20 text-theater-red"
+              : "text-white/60 hover:text-white hover:bg-white/10"
           }`}
         >
           Settings

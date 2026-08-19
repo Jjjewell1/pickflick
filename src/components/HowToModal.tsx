@@ -9,7 +9,7 @@ interface HowToModalProps {
 
 const DEMO_STEPS = [
   { emoji: "👨‍👩‍👧‍👦", label: "Pick your crew", color: "from-emerald-500/30 to-emerald-900/30" },
-  { emoji: "🔀", label: "Shuffle a genre", color: "from-cyan/30 to-cyan-dark/30" },
+  { emoji: "🔀", label: "Shuffle a genre", color: "from-theater-red/30 to-red-900/30" },
   { emoji: "🎬", label: "Nominate movies", color: "from-amber-500/30 to-amber-900/30" },
   { emoji: "🥊", label: "Knockout battles", color: "from-sky-500/30 to-sky-900/30" },
   { emoji: "🎉", label: "Winner!", color: "from-purple-500/30 to-purple-900/30" },
@@ -26,25 +26,22 @@ function DemoReel() {
   const step = DEMO_STEPS[idx];
 
   return (
-    <div className="relative w-full h-44 sm:h-52 rounded-2xl overflow-hidden mb-6 border border-white/[0.08]">
+    <div className="relative w-full h-44 sm:h-52 rounded-2xl overflow-hidden mb-6 border border-white/10">
       <div className={`absolute inset-0 bg-gradient-to-br ${step.color} transition-all duration-500`} />
 
-      {/* Floating geometric bg */}
+      {/* Floating popcorn bg */}
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
-          className="absolute opacity-10"
+          className="absolute text-lg opacity-20 select-none"
           style={{
             left: `${(i * 17 + 5) % 90}%`,
             top: `${(i * 23 + 10) % 80}%`,
-            width: `${8 + (i % 3) * 4}px`,
-            height: `${8 + (i % 3) * 4}px`,
-            border: "1px solid rgba(0,229,255,0.5)",
-            borderRadius: i % 2 === 0 ? "50%" : "1px",
-            transform: `rotate(${i * 30}deg)`,
             animation: `floatKernel ${5 + (i % 3)}s ease-in-out ${i * 0.3}s infinite`,
           }}
-        />
+        >
+          🍿
+        </div>
       ))}
 
       {/* Center emoji */}
@@ -64,14 +61,14 @@ function DemoReel() {
         </span>
       </div>
 
-      {/* Progress dots — cyan */}
+      {/* Progress dots */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
         {DEMO_STEPS.map((_, i) => (
           <div
             key={i}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
               i === idx
-                ? "bg-cyan w-5"
+                ? "bg-theater-gold w-5"
                 : "bg-white/20"
             }`}
           />
@@ -153,10 +150,10 @@ export default function HowToModal({ open, onClose }: HowToModalProps) {
             />
             <InfoStep
               delay={225}
-              emoji="🎬"
+              emoji="🍿"
               title="Everyone nominates"
               desc="Pick 1–2 movies each. Animated handoff between turns."
-              accent="bg-cyan/15 text-cyan border-cyan/20"
+              accent="bg-theater-red/15 text-red-300 border-theater-red/20"
             />
             <InfoStep
               delay={300}
@@ -170,13 +167,13 @@ export default function HowToModal({ open, onClose }: HowToModalProps) {
               emoji="🏆"
               title="Confetti time!"
               desc="Last movie standing wins. Poster + Jellyfin link."
-              accent="bg-cyan/15 text-cyan border-cyan/20"
+              accent="bg-theater-gold/15 text-yellow-300 border-theater-gold/20"
               last
             />
           </div>
 
           {/* Quick tips */}
-          <div className="mt-5 pt-4 border-t border-white/[0.08]">
+          <div className="mt-5 pt-4 border-t border-white/10">
             <div className="flex flex-wrap gap-2">
               <TipChip>🔒 PINs optional</TipChip>
               <TipChip>🎯 Age-filtered</TipChip>
@@ -236,7 +233,7 @@ function InfoStep({
 
 function TipChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/[0.08] text-white/50 text-[11px] font-medium">
+    <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/50 text-[11px] font-medium">
       {children}
     </span>
   );

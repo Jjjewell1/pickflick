@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import TechBackground from "@/components/PopcornBackground";
+import PopcornBackground from "@/components/PopcornBackground";
 import Header from "@/components/Header";
 
 interface Profile {
@@ -13,7 +13,7 @@ interface Profile {
 }
 
 const EMOJI_OPTIONS = [
-  "🎬", "🎥", "🎞️", "🎭", "🎪", "🎤", "🎧", "🎵",
+  "🍿", "🎬", "🎥", "🎞️", "🎭", "🎪", "🎤", "🎧",
   "🦊", "🐱", "🐶", "🐼", "🦁", "🐸", "🦋", "🌟",
   "🚀", "🎸", "🎮", "⚽", "🏀", "🎯", "🎨", "🔮",
   "👦", "👧", "🧑", "👨", "👩", "🧒", "👶", "🧓",
@@ -28,7 +28,7 @@ const AGE_TIERS = [
 export default function SettingsPage() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [name, setName] = useState("");
-  const [emoji, setEmoji] = useState("🎬");
+  const [emoji, setEmoji] = useState("🍿");
   const [ageTier, setAgeTier] = useState("adult");
   const [pin, setPin] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export default function SettingsPage() {
 
   const resetForm = () => {
     setName("");
-    setEmoji("🎬");
+    setEmoji("🍿");
     setAgeTier("adult");
     setPin("");
     setEditingId(null);
@@ -137,7 +137,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen relative">
-      <TechBackground />
+      <PopcornBackground />
       <Header />
 
       <main className="relative z-10 max-w-2xl mx-auto px-4 py-8">
@@ -152,25 +152,25 @@ export default function SettingsPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-silver-dark/60 text-sm mb-1.5">Name</label>
+              <label className="block text-white/60 text-sm mb-1.5">Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter name..."
-                className="w-full bg-white/5 border border-white/[0.08] rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-theater-red/50"
               />
             </div>
 
             <div>
-              <label className="block text-silver-dark/60 text-sm mb-1.5">Avatar</label>
+              <label className="block text-white/60 text-sm mb-1.5">Avatar</label>
               <div className="relative">
                 <button
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className="w-full bg-white/5 border border-white/[0.08] rounded-xl px-4 py-2.5 text-left text-2xl flex items-center gap-3 hover:bg-white/10 transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-left text-2xl flex items-center gap-3 hover:bg-white/10 transition-colors"
                 >
                   <span>{emoji}</span>
-                  <span className="text-silver-dark/40 text-sm">Tap to change</span>
+                  <span className="text-white/40 text-sm">Tap to change</span>
                 </button>
                 {showEmojiPicker && (
                   <div className="absolute z-20 top-full mt-2 left-0 right-0 glass-panel-heavy p-3 grid grid-cols-8 gap-2">
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                           setShowEmojiPicker(false);
                         }}
                         className={`text-2xl p-1.5 rounded-lg hover:bg-white/10 transition-colors ${
-                          emoji === e ? "bg-cyan/20 ring-1 ring-cyan" : ""
+                          emoji === e ? "bg-theater-red/20 ring-1 ring-theater-red" : ""
                         }`}
                       >
                         {e}
@@ -194,7 +194,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-silver-dark/60 text-sm mb-1.5">Age Tier</label>
+              <label className="block text-white/60 text-sm mb-1.5">Age Tier</label>
               <div className="grid grid-cols-3 gap-2">
                 {AGE_TIERS.map((t) => (
                   <button
@@ -203,7 +203,7 @@ export default function SettingsPage() {
                     className={`p-3 rounded-xl border text-center transition-all ${
                       ageTier === t.value
                         ? `${t.color} ring-2 ring-white/20`
-                        : "bg-white/5 border-white/[0.08] text-white/50 hover:bg-white/10"
+                        : "bg-white/5 border-white/10 text-white/50 hover:bg-white/10"
                     }`}
                   >
                     <p className="font-semibold text-sm">{t.label}</p>
@@ -214,7 +214,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-silver-dark/60 text-sm mb-1.5">
+              <label className="block text-white/60 text-sm mb-1.5">
                 {editingId ? (
                   <>New PIN <span className="text-white/30">(leave blank to keep current)</span></>
                 ) : (
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                 value={pin}
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
                 placeholder="••••"
-                className="w-full bg-white/5 border border-white/[0.08] rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 tracking-[0.5em] text-center"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-theater-red/50 tracking-[0.5em] text-center"
               />
             </div>
 
@@ -262,15 +262,15 @@ export default function SettingsPage() {
                 <div
                   key={p.id}
                   className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                    editingId === p.id ? "bg-cyan/10 ring-1 ring-cyan/40" : "bg-white/5"
+                    editingId === p.id ? "bg-theater-magenta/10 ring-1 ring-theater-magenta/40" : "bg-white/5"
                   }`}
                 >
                   <span className="text-2xl">{p.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-white text-sm truncate">{p.name}</p>
-                    <p className="text-silver-dark/40 text-xs">
+                    <p className="text-white/30 text-xs">
                       {p.ageTier}
-                      {p.pin && " · 🔒"}
+                      {p.pin && " · PIN 🔒"}
                     </p>
                   </div>
                   <span
@@ -283,7 +283,7 @@ export default function SettingsPage() {
                   {p.pin && (
                     <button
                       onClick={() => removePin(p)}
-                      className="text-silver-dark/30 hover:text-amber-300 transition-colors p-1"
+                      className="text-white/30 hover:text-amber-300 transition-colors p-1"
                       title="Remove PIN"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                   )}
                   <button
                     onClick={() => editProfile(p)}
-                    className="text-silver-dark/30 hover:text-cyan transition-colors p-1"
+                    className="text-white/30 hover:text-theater-gold transition-colors p-1"
                     title="Edit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +302,7 @@ export default function SettingsPage() {
                   </button>
                   <button
                     onClick={() => deleteProfile(p.id)}
-                    className="text-silver-dark/30 hover:text-red-400 transition-colors p-1"
+                    className="text-white/30 hover:text-red-400 transition-colors p-1"
                     title="Remove"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
