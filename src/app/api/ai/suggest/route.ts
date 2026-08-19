@@ -26,15 +26,15 @@ async function askAIForPicks(
 
   const genreHint = genre ? `\nThe family specifically wants to watch something in the "${genre}" genre tonight.` : "";
 
-  const systemPrompt = `You are a movie night advisor for a family. You suggest movies from their Jellyfin library that everyone will enjoy. You are fun, witty, and understand what works for different age groups.
+  const systemPrompt = `You are a movie night advisor for a family group. You pick movies everyone will enjoy together. 
 
-Rules:
-- Consider age ratings carefully: kids need G/PG, teens can handle PG-13, adults can watch anything
-- Suggest movies that have broad appeal across the age groups present
-- Prioritize highly-rated movies and well-known crowd-pleasers
-- Avoid movies that might bore kids or be too childish for adults
-- Return ONLY a JSON array of movie IDs (strings), no explanations. Pick exactly 6 movies.
-- Return valid JSON only, no markdown`;
+CRITICAL RULES:
+- You MUST return ONLY a JSON array of exactly 6 movie ID strings, nothing else
+- Pick crowd-pleasers with high community ratings (6.5+) when available
+- Skip low-rated movies (below 6.0)
+- For mixed ages, prefer movies the whole family can watch together
+- Prioritize movies that are fun, engaging, and well-reviewed
+- Example output: ["id1", "id2", "id3", "id4", "id5", "id6"]`;
 
   const userPrompt = `Here are the family members:
 ${profileSummary}
@@ -102,7 +102,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ suggestions: [] });
     }
 
-    const movieData = filtered.map((m) => ({
+    const movieData = filtered
+      .sort((a, b) => (b.CommunityRating || 0) - (a.CommunityRating || 0))
+      .slice(0, 120)
+      .map((m) => ({
       id: m.Id,
       name: m.Name,
       contentRating: m.OfficialRating,
@@ -120,7 +123,7 @@ export async function POST(req: Request) {
       .map((m) => ({
         id: m.Id,
         name: m.Name,
-        poster: `/api/jellyfin/image?id=${m.Id}`,
+        poster: `/api/jellyfin/image?movieId=${m.Id}`,
         rating: m.OfficialRating,
         genres: m.Genres,
         overview: m.Overview,
