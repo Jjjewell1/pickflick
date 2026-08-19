@@ -13,15 +13,16 @@ export default function Header({ onHowTo }: HeaderProps) {
   return (
     <header className="relative z-30 mx-4 sm:mx-6 mt-6 sm:mt-8">
       <div className="flex items-center justify-between px-4 sm:px-5 py-3 rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <img
-            src="/logo.png"
-            alt="PickFlick"
-            className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_6px_rgba(192,48,120,0.3)] group-hover:drop-shadow-[0_0_12px_rgba(192,48,120,0.5)] transition-all duration-300"
-          />
-          <span className="font-display text-xs sm:text-sm font-bold text-white/50 tracking-widest hidden sm:inline group-hover:text-white/70 transition-colors">
-            BOX OFFICE
+        {/* Logo — text-based */}
+        <Link href="/" className="flex items-center group flex-shrink-0">
+          <span
+            className="font-display text-xl sm:text-2xl font-black tracking-[0.08em] text-white/80 group-hover:text-theater-gold transition-colors duration-300"
+            style={{
+              textShadow: "0 0 20px rgba(245,197,24,0.2)",
+            }}
+          >
+            PICK
+            <span className="text-theater-gold">FLICK</span>
           </span>
         </Link>
 
