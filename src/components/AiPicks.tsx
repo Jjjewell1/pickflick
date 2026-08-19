@@ -77,16 +77,73 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
         <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/8" />
       </div>
 
-      {/* Loading state */}
+      {/* Loading — film projector animation */}
       {loading && (
-        <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-hide">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex-shrink-0 w-[140px] sm:w-[160px]">
-              <div className="aspect-[2/3] rounded-xl bg-white/[0.04] border border-white/[0.06] animate-pulse" />
-              <div className="mt-2 h-3 bg-white/[0.04] rounded-full w-3/4 animate-pulse" />
-              <div className="mt-1.5 h-2.5 bg-white/[0.03] rounded-full w-1/2 animate-pulse" />
+        <div className="flex flex-col items-center gap-4 py-10">
+          {/* Film reels */}
+          <div className="relative flex items-center gap-6">
+            {/* Left reel */}
+            <div className="w-16 h-16 rounded-full border-2 border-theater-gold/30 flex items-center justify-center animate-spin" style={{ animationDuration: "2s" }}>
+              <div className="w-10 h-10 rounded-full border border-theater-gold/20 flex items-center justify-center">
+                <div className="w-4 h-4 rounded-full bg-theater-gold/40" />
+              </div>
+              {/* Spokes */}
+              {[0, 60, 120].map((deg) => (
+                <div
+                  key={deg}
+                  className="absolute w-full h-0.5 bg-theater-gold/15"
+                  style={{ transform: `rotate(${deg}deg)` }}
+                />
+              ))}
             </div>
-          ))}
+
+            {/* Film strip connector */}
+            <div className="flex flex-col gap-1">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="w-8 h-1 bg-theater-gold/20 rounded-full"
+                  style={{
+                    animation: "filmPulse 1s ease-in-out infinite",
+                    animationDelay: `${i * 0.15}s`,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Right reel — smaller, spins opposite */}
+            <div className="w-12 h-12 rounded-full border-2 border-theater-gold/20 flex items-center justify-center animate-spin" style={{ animationDuration: "1.5s", animationDirection: "reverse" }}>
+              <div className="w-7 h-7 rounded-full border border-theater-gold/15 flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-theater-gold/30" />
+              </div>
+            </div>
+          </div>
+
+          {/* Status text */}
+          <div className="text-center">
+            <p className="text-white/40 text-sm font-medium">Screening your library...</p>
+            <p className="text-white/20 text-[10px] mt-1">
+              <span className="inline-flex gap-0.5">
+                <span className="animate-bounce" style={{ animationDelay: "0s" }}>.</span>
+                <span className="animate-bounce" style={{ animationDelay: "0.15s" }}>.</span>
+                <span className="animate-bounce" style={{ animationDelay: "0.3s" }}>.</span>
+              </span>
+            </p>
+          </div>
+
+          {/* Film frames sliding through */}
+          <div className="flex gap-1.5 overflow-hidden w-full max-w-xs justify-center">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="w-8 h-11 rounded bg-white/[0.06] border border-white/[0.08]"
+                style={{
+                  animation: "filmSlide 2s ease-in-out infinite",
+                  animationDelay: `${i * 0.2}s`,
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
 

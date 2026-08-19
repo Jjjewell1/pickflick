@@ -472,6 +472,18 @@ body {
   100% { box-shadow: 0 0 30px rgba(245, 197, 24, 0.3), 0 0 60px rgba(245, 197, 24, 0.1); }
 }
 
+@keyframes filmPulse {
+  0%, 100% { opacity: 0.2; transform: scaleX(0.6); }
+  50% { opacity: 0.7; transform: scaleX(1); }
+}
+
+@keyframes filmSlide {
+  0% { opacity: 0; transform: translateX(-20px) scale(0.8); }
+  20% { opacity: 1; transform: translateX(0) scale(1); }
+  80% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(20px) scale(0.8); }
+}
+
 /* ============================================================
    Ticket cards — premium cinema tickets with 3D tilt + shine
    ============================================================ */
