@@ -185,7 +185,7 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
             <button
               key={pick.id}
               onClick={() => onSelect?.(pick.id, pick.name)}
-              className="group flex-shrink-0 w-[140px] sm:w-[160px] text-left"
+              className="group flex-shrink-0 w-[160px] sm:w-[185px] text-left"
               style={{ animation: `ticketIn 0.5s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.08}s both` }}
             >
               {/* Poster */}
@@ -209,17 +209,17 @@ export default function AiPicks({ profiles, onSelect }: AiPicksProps) {
 
               {/* Info strip */}
               <div className="bg-white/[0.04] backdrop-blur-sm border border-white/[0.06] border-t-0 rounded-b-xl px-2.5 py-2">
-                <p className="font-display text-[13px] font-bold text-white/90 leading-tight line-clamp-1 group-hover:text-theater-gold transition-colors">
+                <p className="font-display text-sm font-bold text-white/90 leading-tight line-clamp-1 group-hover:text-theater-gold transition-colors">
                   {cleanTitle(pick.name)}
                 </p>
-                <div className="flex items-center gap-1.5 mt-1">
+                <div className="flex items-center gap-1.5 mt-1.5">
                   {pick.rating && (
-                    <span className="text-[9px] font-bold text-white/30 bg-white/[0.06] px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-white/35 bg-white/[0.06] px-1.5 py-0.5 rounded">
                       {pick.rating}
                     </span>
                   )}
                   {pick.genres && pick.genres[0] && (
-                    <span className="text-[9px] text-white/25 truncate">
+                    <span className="text-[10px] text-white/30 truncate">
                       {pick.genres[0]}
                     </span>
                   )}
